@@ -272,7 +272,7 @@ export default {
       margin-bottom: 34rem;
       color: $black;
       &--animated {
-        width: 96rem;
+        width: 179rem;
         color: $white;
       }
     }

@@ -23,6 +23,7 @@
       <input
         :type="nativeInputType"
         :placeholder="placeholder"
+        :value="value"
         @input="$emit('input', $event.target.value)"
       />
       <button class="start-input__reveal"
@@ -45,7 +46,6 @@
     <span class="start-input__error-msg timemaster-caption"
       :class="{ 'start-input__error-msg--shake' : animationError}"
       v-if="showError"
-      @click="animationError = true"
     >
     {{ errorMessage }}
     </span>
@@ -56,19 +56,32 @@
 export default {
   name: "StartInput",
   props: {
+    value: null,
+    trigger: {
+      type: Boolean,
+      default: false
+    },
+
     type: null,
     placeholder: {
       type: String
     },
-    errorMessage: {
-      type: String
-    }
   },
   data: () => ({
     passwordReveal: false,
+
+    errorMessage: "",
+
     showError: false,
     animationError: false
   }),
+  methods: {
+    sendError(message) {
+      this.errorMessage = message;
+      this.showError = true;
+      this.animationError = true;
+    }
+  },
   computed: {
     nativeInputType() {
       if (this.type === "password") {
@@ -76,16 +89,52 @@ export default {
       } else {
         return "test"
       }
-    }
+    },
   },
   watch: {
     animationError(value) {
-      if (value === true) {
+      if (value) {
         setTimeout(() => {
           this.animationError = false
         }, 1300)
       }
+    },
+    trigger() {
+      if(this.$el.hasAttribute("required") && !this.value) {
+          this.sendError("This field is required");
+
+      } else {
+        switch(this.type) {
+          case "name":
+            if(this.value.length < 3 || this.value.length > 15) {
+              this.sendError("Name length must be between 3-15 characters long")
+            }
+            else {
+              this.showError = false;
+            }
+            break;
+          case "email":
+            const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if (!this.value.match(validRegex)) {
+              this.sendError("This field must be a valid email")
+            }
+            else {
+              this.showError = false;
+            }
+            break;
+          case "password":
+            if(this.value.length < 4 || this.value.length > 8) {
+              this.sendError("Password length must be between 4-8 characters long")
+            }
+            else {
+              this.showError = false;
+            }
+            break;
+        }
+      }
+      this.$emit("validate", this.showError);
     }
+
   }
 }
 </script>

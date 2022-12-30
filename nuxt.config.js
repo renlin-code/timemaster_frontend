@@ -30,6 +30,11 @@ export default {
     ],
   },
 
+  loading: {
+    color: "transparent",
+    height: 0
+  },
+
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
   ],

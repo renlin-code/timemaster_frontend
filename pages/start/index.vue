@@ -58,7 +58,7 @@ export default {
       height: max-content;
       background: $white;
       padding: 67rem 25rem 86rem;
-      box-shadow: inset 0px 4px 4px $main-color;
+      box-shadow: inset 0 4rem 4rem $main-color;
       border-radius: 30rem 30rem 0 0;
       &-title {
         color: $black;
