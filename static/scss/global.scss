@@ -1,0 +1,51 @@
+@import "./vars";
+@import "./fonts";
+@import "./reset";
+
+//TEXT STYLES
+h1, .timemaster-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 32rem;
+    line-height: 48rem;
+    font-weight: 600;
+    letter-spacing: -0.3rem;
+}
+h2, .timemaster-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20rem;
+    line-height: 30rem;
+    font-weight: 500;
+    letter-spacing: -0.3rem;
+}
+.timemaster-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16rem;
+    line-height: 24rem;
+    font-weight: 400;
+    letter-spacing: -0.3rem;
+}
+.timemaster-caption {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14rem;
+    line-height: 21rem;
+    font-weight: 400;
+    letter-spacing: -0.3rem;
+}
+
+//LAYOUT
+.main-content-wrapper {
+  width: 100%;
+  padding: 0 25rem;
+}
+
+
+//TRANSITIONS
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 360ms ease-in-out;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
