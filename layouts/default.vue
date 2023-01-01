@@ -11,7 +11,13 @@
 import DesktopRejetion from '~/components/others/DesktopRejetion.vue';
 
   export default {
-      components: { DesktopRejetion }
+      components: { DesktopRejetion },
+      created() {
+        const isNew = !localStorage.getItem("savedDevice");
+        if (isNew) {
+          this.$router.push("/start")
+        }
+      }
   }
 </script>
 

@@ -42,7 +42,7 @@
               v-model="dataForPost.email"
               :trigger="validateTrigger"
               @validate="validateResponse"
-
+              :injectedErrorMessage="errorMessage"
             />
             <StartInput
               required
@@ -95,7 +95,7 @@ export default {
       validateTrigger: false,
       pending: false,
       validateStack: [],
-
+      errorMessage: "",
 
       dataForPost: {
         name: "",
@@ -105,6 +105,7 @@ export default {
     }),
     methods: {
       validate(){
+        this.errorMessage = "";
         this.validateStack = [];
         this.validateTrigger = !this.validateTrigger
 
@@ -126,10 +127,12 @@ export default {
           this.showModal = true;
         } catch (error) {
           this.pending = false;
-          console.error(error.response.data.message)
+          if(error.response.data.statusCode == 409) {
+            this.errorMessage = "This user has already signed up";
+          }
         }
       }
-    },
+    }
 }
 </script>
 

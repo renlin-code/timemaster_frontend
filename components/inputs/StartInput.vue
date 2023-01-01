@@ -61,6 +61,9 @@ export default {
       type: Boolean,
       default: false
     },
+    injectedErrorMessage: {
+      type: String
+    },
 
     type: null,
     placeholder: {
@@ -99,6 +102,10 @@ export default {
         }, 1300)
       }
     },
+    injectedErrorMessage(value) {
+      this.sendError(value);
+    },
+
     trigger() {
       if(this.$el.hasAttribute("required") && !this.value) {
           this.sendError("This field is required");

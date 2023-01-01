@@ -7,6 +7,9 @@
     </template>
 
     <template #inner>
+      <FormPreloader
+        v-if="pending"
+      />
       <div class="login__form">
         <div class="login__form-top">
           <h2 class="login__form-subtitle timemaster-subtitle">
@@ -14,15 +17,22 @@
           </h2>
           <div class="login__form-inputs">
             <StartInput
+              required
               type="email"
               placeholder="Email"
-              errorMessage="This email is already registered"
-              @input="setModel"
+              v-model="dataForPost.email"
+              :trigger="validateTrigger"
+              @validate="validateResponse"
+              :injectedErrorMessage="emailErrorMessage"
             />
             <StartInput
+              required
               type="password"
               placeholder="Password"
-              @input="setModel"
+              v-model="dataForPost.password"
+              :trigger="validateTrigger"
+              @validate="validateResponse"
+              :injectedErrorMessage="passwordErrorMessage"
             />
           </div>
           <NuxtLink to="/start/recovery" class="login__form-recovery timemaster-caption">
@@ -32,6 +42,7 @@
         <div class="login__form-bottom">
           <MainButton
             type="1"
+            @click.native="validate"
           >
             Log in
           </MainButton>
@@ -59,15 +70,59 @@
 import MainButton from '~/components/buttons/MainButton.vue';
 import StartInput from '~/components/inputs/StartInput.vue';
 import StartPage from '~/components/layout/StartPage.vue';
+import FormPreloader from '~/components/preloaders/FormPreloader.vue';
+
 
 export default {
-  components: { StartPage, StartInput, MainButton },
+  components: { StartPage, StartInput, MainButton, FormPreloader },
   data: () => ({
-    model: null
+    validateTrigger: false,
+    pending: false,
+    validateStack: [],
+    emailErrorMessage: "",
+    passwordErrorMessage: "",
+
+    dataForPost: {
+      email: "",
+      password: ""
+    }
   }),
   methods: {
-    setModel(value) {
-      // console.log(value)
+    validate(){
+      this.emailErrorMessage = "";
+      this.passwordErrorMessage = "";
+      this.validateStack = [];
+      this.validateTrigger = !this.validateTrigger
+    },
+    validateResponse(error){
+      this.validateStack.push(error)
+
+      const count = this.$el.querySelectorAll('*[required]').length
+      if(this.validateStack.length === count && this.validateStack.indexOf(true) === -1 && !this.pending){
+        this.submit()
+      }
+    },
+
+    async submit() {
+      try {
+        this.pending = true;
+        const res = await this.$axios.$post("/auth/signin", this.dataForPost);
+        this.pending = false;
+
+        const authToken = res.token;
+        localStorage.setItem("authToken", authToken);
+        localStorage.setItem("savedDevice", true);
+
+
+        this.$router.push("/");
+      } catch (error) {
+        this.pending = false;
+        if(error.response.data.statusCode == 404) {
+          this.emailErrorMessage = "This user is not signed up";
+        } else if (error.response.data.statusCode == 401) {
+          this.passwordErrorMessage = "Wrong password"
+        }
+      }
     }
   }
 }
