@@ -7,6 +7,7 @@
 <script>
 export default {
   name: 'IndexPage',
+  layout: 'inner',
   data: () => ({
     authToken: ""
   }),

@@ -99,7 +99,6 @@ export default {
         this.$nuxt.error("404");
       } else {
         this.dataForPost.token = queryToken;
-
       }
     }
 }
