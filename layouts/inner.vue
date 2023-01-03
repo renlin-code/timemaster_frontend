@@ -85,8 +85,8 @@ import NavMenu from '~/components/navigation/NavMenu.vue';
     background-position: center;
     background-size: cover;
     min-height: 100vh;
-    box-shadow: 0rem -2rem 6rem rgba(0, 0, 0, 0.25), -2rem 2rem 6rem rgba(0, 0, 0, 0.25);
-    transition: all 360ms ease-in-out;
+    box-shadow: 0rem 2rem 6rem rgba(0, 0, 0, 0.25), 2rem 2rem 6rem rgba(0, 0, 0, 0.25);
+    transition: all 320ms ease-in-out;
     &__cover-layer {
       width: 100%;
       height: 100%;

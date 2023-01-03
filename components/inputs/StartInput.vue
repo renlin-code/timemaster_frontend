@@ -113,8 +113,8 @@ export default {
       } else {
         switch(this.type) {
           case "name":
-            if(this.value.length < 3 || this.value.length > 15) {
-              this.sendError("Name length must be between 3-15 characters long")
+            if(this.value.length < 3 || this.value.length > 10) {
+              this.sendError("Name length must be between 3-10 characters long")
             }
             else {
               this.showError = false;

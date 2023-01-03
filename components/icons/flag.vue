@@ -25,6 +25,6 @@ export default {
 
 <style scoped lang="scss">
   svg path {
-    transition: all 360ms ease-in-out;
+    transition: all 320ms ease-in-out;
   }
 </style>
