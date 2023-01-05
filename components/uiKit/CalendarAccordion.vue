@@ -133,13 +133,21 @@ export default {
     },
     selectDate(date) {
       this.selectedDate = date;
-      this.$emit("selectedDate", `${this.currYear}-${this.currMonth + 1}-${this.selectedDate}`);
-      console.log(`${this.currYear}-${this.currMonth + 1}-${this.selectedDate}`)
+
+      const formatedMonth = this.currMonth < 9 ? `0${this.currMonth + 1}` : this.currMonth + 1;
+      const formatedDate = this.selectedDate < 10 ? `0${this.selectedDate}` : this.selectedDate;
+      this.$emit("selectDate", `${this.currYear}-${formatedMonth}-${formatedDate}`);
+    }
+  },
+  watch: {
+    selectedDate() {
+      this.open = false;
     }
   },
 
   created() {
     this.calendarInit();
+    this.selectDate(this.date.getDate());
   },
 }
 </script>

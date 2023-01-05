@@ -1,7 +1,7 @@
 <template>
   <button
     class="important-button"
-    :class="{ selected: selected }"
+    :class="{ 'selected': selected }"
     @click="select"
   >
     <flag :color="flagColor" />

@@ -56,7 +56,6 @@ export default {
   async created() {
     await this.fetchCategories();
     this.select(this.categories[0])
-
   },
 }
 </script>

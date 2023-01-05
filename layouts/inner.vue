@@ -9,14 +9,19 @@
         v-model="taskData.name"
         :maxlength="30"
         v-if="showModal.fromHome"
-        @close="showModal.fromHome = false"
+        @close="closeModal"
       >
         <template #scroll-content>
+          <FormPreloader
+            v-if="pending"
+          />
           <CategoriesAccordion class="inner-modal-task__categories"
             @selectCategory="selectCategory"
           />
 
-          <CalendarAccordion class="inner-modal-task__calendar" />
+          <CalendarAccordion class="inner-modal-task__calendar"
+            @selectDate="selectDate"
+          />
 
           <ImportantButton class="inner-modal-task__important"
             @select="setImportant"
@@ -94,10 +99,11 @@ import OkButton from '~/components/buttons/OkButton.vue';
 import CategoriesAccordion from '~/components/uiKit/CategoriesAccordion.vue';
 import CalendarAccordion from '~/components/uiKit/CalendarAccordion.vue';
 import ImportantButton from '~/components/buttons/ImportantButton.vue';
+import FormPreloader from '~/components/preloaders/FormPreloader.vue';
 
 
   export default {
-      components: { DesktopRejetion, HeaderDefault, NavMenu, InnerInputModal, OkButton, CategoriesAccordion, CalendarAccordion, ImportantButton },
+      components: { DesktopRejetion, HeaderDefault, NavMenu, InnerInputModal, OkButton, CategoriesAccordion, CalendarAccordion, ImportantButton, FormPreloader },
       data: () => ({
         frontOpen: false,
         showModal: {
@@ -109,18 +115,40 @@ import ImportantButton from '~/components/buttons/ImportantButton.vue';
           date: "",
           important: false,
           categoryId: null
-        }
+        },
 
+        pending: false
       }),
       methods: {
+        closeModal() {
+          for (let key in this.showModal){
+            this.showModal[key] = false;
+          }
+          this.taskData = {};
+        },
+
         selectCategory(id) {
           this.taskData.categoryId = id;
+        },
+        selectDate(date) {
+          this.taskData.date = date;
         },
         setImportant(value){
           this.taskData.important = value;
         },
-        submitTask() {
-          console.log(this.taskData);
+        async submitTask() {
+          if(this.taskData.name) {
+              try {
+              this.pending = true;
+              await this.$axios.$post("/profile/my-tasks", this.taskData);
+
+              this.pending = false;
+              this.closeModal();
+            } catch (error) {
+              console.error(error.response.data.message);
+              this.pending = false;
+            }
+          }
         }
       },
 
@@ -132,7 +160,6 @@ import ImportantButton from '~/components/buttons/ImportantButton.vue';
       },
       mounted() {
         this.$nuxt.$on('openModalFromHome', () => {
-          this.taskData = {};
           this.showModal.fromHome = true;
         })
 

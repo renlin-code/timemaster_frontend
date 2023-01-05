@@ -1,6 +1,7 @@
 <template>
   <section>
     <InnerPage class="home-page"
+    :blur="!noTasks"
     :staticContentHeight="200"
     v-if="profileData"
   >
@@ -22,7 +23,7 @@
 
       <template #button>
       <AddTaskButton
-        animated
+        :animated="noTasks"
         @click.native="$nuxt.$emit('openModalFromHome')"
       />
       </template>
@@ -50,8 +51,6 @@ export default {
       async fetchProfileData() {
         try {
           const data = await this.$axios.$get("/profile/");
-          // console.log(this.profileData);
-
           if(data.categories.length === 0) {
             await this.createStartCategories();
             this.profileData = await this.$axios.$get("/profile/");
@@ -59,6 +58,7 @@ export default {
             this.profileData = data;
           }
 
+          console.log(this.profileData);
         } catch (error) {
           console.error(error)
           if (error.response.data.statusCode == 401) {
@@ -67,6 +67,11 @@ export default {
             this.$router.push("/start");
           }
         }
+      }
+    },
+    computed: {
+      noTasks() {
+        return this.profileData.categories.every(i => i.tasks.length === 0);
       }
     },
 
