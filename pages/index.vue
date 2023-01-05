@@ -1,5 +1,6 @@
 <template>
-  <InnerPage
+  <section>
+    <InnerPage class="home-page"
     :staticContentHeight="200"
     v-if="profileData"
   >
@@ -22,9 +23,11 @@
       <template #button>
       <AddTaskButton
         animated
+        @click.native="$nuxt.$emit('openModalFromHome')"
       />
       </template>
-  </InnerPage>
+    </InnerPage>
+  </section>
 </template>
 
 <script>
@@ -33,11 +36,12 @@ import CategoryCard from '~/components/uiKit/CategoryCard.vue';
 import CategoriesCarousell from '~/components/complexItems/CategoriesCarousell.vue';
 import AddTaskButton from '~/components/buttons/AddTaskButton.vue';
 import { startCategoriesMixin } from "~/mixins/startCategoriesMixin";
+import InnerInputModal from '~/components/modals/InnerInputModal.vue';
 
 export default {
     name: "IndexPage",
     layout: "inner",
-    components: { InnerPage, CategoryCard, CategoriesCarousell, AddTaskButton },
+    components: { InnerPage, CategoryCard, CategoriesCarousell, AddTaskButton, InnerInputModal },
     mixins: [startCategoriesMixin()],
     data: () => ({
       profileData: null
@@ -46,7 +50,7 @@ export default {
       async fetchProfileData() {
         try {
           const data = await this.$axios.$get("/profile/");
-          console.log(this.profileData);
+          // console.log(this.profileData);
 
           if(data.categories.length === 0) {
             await this.createStartCategories();

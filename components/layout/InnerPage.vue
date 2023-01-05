@@ -83,6 +83,7 @@ export default {
     }
     &__scroll-block {
       overflow-y: scroll;
+      padding-bottom: 27rem;
       &::v-deep > h2 {
         margin-bottom: 13rem;
         color: $dark-gray;

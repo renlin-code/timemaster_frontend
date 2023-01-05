@@ -1,84 +1,86 @@
 <template>
-  <StartPage class="signup"
-    animated
-  >
-    <template #title>
-      Create account
-    </template>
+  <section>
+    <StartPage class="signup"
+      animated
+    >
+      <template #title>
+        Create account
+      </template>
 
-    <template #inner>
+      <template #inner>
 
-      <StartModal
-        v-if=showModal
-        @close="showModal = false"
-      >
-        <template #main-text>
-          Please check out your email, we have sent you a confirmation email
-        </template>
-        <template #button-text>
-          Ok
-        </template>
-      </StartModal>
+        <StartModal
+          v-if=showModal
+          @close="showModal = false"
+        >
+          <template #main-text>
+            Please check out your email, we have sent you a confirmation email
+          </template>
+          <template #button-text>
+            Ok
+          </template>
+        </StartModal>
 
-      <FormPreloader
-        v-if="pending"
-      />
+        <FormPreloader
+          v-if="pending"
+        />
 
-      <div class="signup__form">
-        <div class="signup__form-top">
-          <div class="signup__form-inputs">
-            <StartInput
-              required
-              type="name"
-              placeholder="Name"
-              v-model="dataForPost.name"
-              :trigger="validateTrigger"
-              @validate="validateResponse"
-            />
-            <StartInput
-              required
-              type="email"
-              placeholder="Email"
-              v-model="dataForPost.email"
-              :trigger="validateTrigger"
-              @validate="validateResponse"
-              :injectedErrorMessage="errorMessage"
-            />
-            <StartInput
-              required
-              type="password"
-              placeholder="Password"
-              v-model="dataForPost.password"
-              :trigger="validateTrigger"
-              @validate="validateResponse"
-            />
+        <div class="signup__form">
+          <div class="signup__form-top">
+            <div class="signup__form-inputs">
+              <StartInput
+                required
+                type="name"
+                placeholder="Name"
+                v-model="dataForPost.name"
+                :trigger="validateTrigger"
+                @validate="validateResponse"
+              />
+              <StartInput
+                required
+                type="email"
+                placeholder="Email"
+                v-model="dataForPost.email"
+                :trigger="validateTrigger"
+                @validate="validateResponse"
+                :injectedErrorMessage="errorMessage"
+              />
+              <StartInput
+                required
+                type="password"
+                placeholder="Password"
+                v-model="dataForPost.password"
+                :trigger="validateTrigger"
+                @validate="validateResponse"
+              />
+            </div>
           </div>
-        </div>
-        <div class="signup__form-bottom">
-          <MainButton
-            type="1"
-            @click.native="validate"
-          >
-            Sign up
-          </MainButton>
-          <div class="signup__form-separator">
-            <div class="signup__form-separator-line"></div>
-              <span class="timemaster-subtitle">
-                or
-              </span>
-            <div class="signup__form-separator-line"></div>
-          </div>
-          <NuxtLink to="/start/login">
+          <div class="signup__form-bottom">
             <MainButton
-              type="2"
+              type="1"
+              @click.native="validate"
             >
-              Log in
+              Sign up
             </MainButton>
-          </NuxtLink>
+            <div class="signup__form-separator">
+              <div class="signup__form-separator-line"></div>
+                <span class="timemaster-subtitle">
+                  or
+                </span>
+              <div class="signup__form-separator-line"></div>
+            </div>
+            <NuxtLink to="/start/login">
+              <MainButton
+                type="2"
+              >
+                Log in
+              </MainButton>
+            </NuxtLink>
+          </div>
         </div>
-      </div>
-    </template>
-  </StartPage>
+      </template>
+    </StartPage>
+  </section>
 </template>
 
 <script>

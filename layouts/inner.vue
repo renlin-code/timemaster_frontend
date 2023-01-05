@@ -2,6 +2,43 @@
   <Transition name="fade">
     <div class="screen">
       <DesktopRejetion />
+
+      <InnerInputModal class="inner-modal-task"
+        blur
+        placeholder="Add new task"
+        v-model="taskData.name"
+        :maxlength="30"
+        v-if="showModal.fromHome"
+        @close="showModal.fromHome = false"
+      >
+        <template #scroll-content>
+          <CategoriesAccordion class="inner-modal-task__categories"
+            @selectCategory="selectCategory"
+          />
+
+          <CalendarAccordion class="inner-modal-task__calendar" />
+
+          <ImportantButton class="inner-modal-task__important"
+            @select="setImportant"
+          />
+        </template>
+
+        <template #button>
+          <OkButton
+            @click.native="submitTask"
+          />
+        </template>
+      </InnerInputModal>
+
+
+
+
+
+
+
+
+
+
       <div class="front-layer"
         :class="{'front-layer--open' : frontOpen}"
       >
@@ -52,17 +89,53 @@
 import HeaderDefault from '~/components/headers/HeaderDefault.vue';
 import DesktopRejetion from '~/components/others/DesktopRejetion.vue';
 import NavMenu from '~/components/navigation/NavMenu.vue';
+import InnerInputModal from '~/components/modals/InnerInputModal.vue';
+import OkButton from '~/components/buttons/OkButton.vue';
+import CategoriesAccordion from '~/components/uiKit/CategoriesAccordion.vue';
+import CalendarAccordion from '~/components/uiKit/CalendarAccordion.vue';
+import ImportantButton from '~/components/buttons/ImportantButton.vue';
+
 
   export default {
-      components: { DesktopRejetion, HeaderDefault, NavMenu },
+      components: { DesktopRejetion, HeaderDefault, NavMenu, InnerInputModal, OkButton, CategoriesAccordion, CalendarAccordion, ImportantButton },
       data: () => ({
-        frontOpen: false
+        frontOpen: false,
+        showModal: {
+          fromHome: false
+        },
+
+        taskData: {
+          name: "",
+          date: "",
+          important: false,
+          categoryId: null
+        }
+
       }),
+      methods: {
+        selectCategory(id) {
+          this.taskData.categoryId = id;
+        },
+        setImportant(value){
+          this.taskData.important = value;
+        },
+        submitTask() {
+          console.log(this.taskData);
+        }
+      },
+
       created() {
         const isNew = !localStorage.getItem("savedDevice");
         if (isNew) {
           this.$router.push("/start")
         }
+      },
+      mounted() {
+        this.$nuxt.$on('openModalFromHome', () => {
+          this.taskData = {};
+          this.showModal.fromHome = true;
+        })
+
       }
   }
 </script>
@@ -211,5 +284,13 @@ import NavMenu from '~/components/navigation/NavMenu.vue';
       left: 0;
       top: 0;
     }
-}
+  }
+  .inner-modal-task {
+    &__categories {
+      margin-bottom: 32rem;
+    }
+    &__calendar {
+      margin-bottom: 32rem;
+    }
+  }
 </style>

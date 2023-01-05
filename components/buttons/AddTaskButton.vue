@@ -103,12 +103,12 @@ export default {
       .add-task {
         &__button {
           animation-name: button;
-          animation-duration: 4s;
+          animation-duration: 6s;
           animation-iteration-count: infinite;
         }
         &__cta-inner {
           animation-name: cta;
-          animation-duration: 4s;
+          animation-duration: 6s;
           animation-iteration-count: infinite;
         }
       }
@@ -119,7 +119,7 @@ export default {
         transform: rotate(-30deg);
       }
       12% {
-        transform: rotate(30deg);
+        transform: rotate(10deg);
       }
       16% {
         transform: rotate(0deg);

@@ -1,54 +1,56 @@
 <template>
-  <StartPage class="recovery">
-    <template #title>
-      Change password
-    </template>
+  <section>
+    <StartPage class="recovery">
+      <template #title>
+        Change password
+      </template>
 
-    <template #subtitle>
-      Please enter your email and we will send you a recovery email
-    </template>
+      <template #subtitle>
+        Please enter your email and we will send you a recovery email
+      </template>
 
-    <template #inner>
-      <StartModal
-        v-if=showModal
-        @close="showModal = false"
-      >
-        <template #main-text>
-          Please check out your email, we have sent you a password recovery email
-        </template>
-        <template #button-text>
-          Ok
-        </template>
-      </StartModal>
+      <template #inner>
+        <StartModal
+          v-if=showModal
+          @close="showModal = false"
+        >
+          <template #main-text>
+            Please check out your email, we have sent you a password recovery email
+          </template>
+          <template #button-text>
+            Ok
+          </template>
+        </StartModal>
 
-      <FormPreloader
-        v-if="pending"
-      />
+        <FormPreloader
+          v-if="pending"
+        />
 
 
-      <div class="recovery__form">
-        <div class="recovery__form-top">
-          <StartInput
-            required
-            type="email"
-            placeholder="Email"
-            v-model="dataForPost.email"
-            :trigger="validateTrigger"
-            @validate="validateResponse"
-            :injectedErrorMessage="errorMessage"
-          />
+        <div class="recovery__form">
+          <div class="recovery__form-top">
+            <StartInput
+              required
+              type="email"
+              placeholder="Email"
+              v-model="dataForPost.email"
+              :trigger="validateTrigger"
+              @validate="validateResponse"
+              :injectedErrorMessage="errorMessage"
+            />
+          </div>
+          <div class="recovery__form-bottom">
+            <MainButton
+              type="1"
+              @click.native="validate"
+            >
+              Send me email
+            </MainButton>
+          </div>
         </div>
-        <div class="recovery__form-bottom">
-          <MainButton
-            type="1"
-            @click.native="validate"
-          >
-            Send me email
-          </MainButton>
-        </div>
-      </div>
-    </template>
-  </StartPage>
+      </template>
+    </StartPage>
+  </section>
 </template>
 
 <script>

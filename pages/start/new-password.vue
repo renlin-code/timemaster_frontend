@@ -1,51 +1,53 @@
 <template>
-  <StartPage class="new-password">
-    <template #title>
-      Change password
-    </template>
+  <section>
+    <StartPage class="new-password">
+      <template #title>
+        Change password
+      </template>
 
-    <template #subtitle>
-      Please enter a new password
-    </template>
+      <template #subtitle>
+        Please enter a new password
+      </template>
 
-    <template #inner>
-      <FormPreloader
-        v-if="pending"
-      />
+      <template #inner>
+        <FormPreloader
+          v-if="pending"
+        />
 
-      <div class="new-password__form">
-        <div class="new-password__form-top">
-          <div class="new-password__form-inputs">
-            <StartInput
-              required
-              type="password"
-              placeholder="New password"
-              v-model="password1"
-              :trigger="validateTrigger"
-              @validate="validateResponse"
-            />
-            <StartInput
-              required
-              type="password"
-              placeholder="Repeat password"
-              v-model="password2"
-              :trigger="validateTrigger"
-              @validate="validateResponse"
-              :injectedErrorMessage="errorMessage"
-            />
+        <div class="new-password__form">
+          <div class="new-password__form-top">
+            <div class="new-password__form-inputs">
+              <StartInput
+                required
+                type="password"
+                placeholder="New password"
+                v-model="password1"
+                :trigger="validateTrigger"
+                @validate="validateResponse"
+              />
+              <StartInput
+                required
+                type="password"
+                placeholder="Repeat password"
+                v-model="password2"
+                :trigger="validateTrigger"
+                @validate="validateResponse"
+                :injectedErrorMessage="errorMessage"
+              />
+            </div>
+          </div>
+          <div class="new-password__form-bottom">
+            <MainButton
+              type="1"
+              @click.native="validate"
+            >
+              Ok
+            </MainButton>
           </div>
         </div>
-        <div class="new-password__form-bottom">
-          <MainButton
-            type="1"
-            @click.native="validate"
-          >
-            Ok
-          </MainButton>
-        </div>
-      </div>
-    </template>
-  </StartPage>
+      </template>
+    </StartPage>
+  </section>
 </template>
 
 <script>

@@ -1,40 +1,42 @@
 <template>
-  <StartPage class="confirm-email">
-    <template #title>
-      Confirm email
-    </template>
+  <section>
+    <StartPage class="confirm-email">
+      <template #title>
+        Confirm email
+      </template>
 
-    <template #subtitle>
-      Please enter your password to confirm your email
-    </template>
+      <template #subtitle>
+        Please enter your password to confirm your email
+      </template>
 
-    <template #inner>
-      <FormPreloader
-        v-if="pending"
-      />
-      <div class="confirm-email__form">
-        <div class="confirm-email__form-top">
-          <StartInput
-            required
-            type="password"
-            placeholder="Password"
-            v-model="dataForPost.password"
-            :trigger="validateTrigger"
-            @validate="validateResponse"
-            :injectedErrorMessage="errorMessage"
-          />
+      <template #inner>
+        <FormPreloader
+          v-if="pending"
+        />
+        <div class="confirm-email__form">
+          <div class="confirm-email__form-top">
+            <StartInput
+              required
+              type="password"
+              placeholder="Password"
+              v-model="dataForPost.password"
+              :trigger="validateTrigger"
+              @validate="validateResponse"
+              :injectedErrorMessage="errorMessage"
+            />
+          </div>
+          <div class="confirm-email__form-bottom">
+            <MainButton
+              type="1"
+              @click.native="validate"
+            >
+              Confirm
+            </MainButton>
+          </div>
         </div>
-        <div class="confirm-email__form-bottom">
-          <MainButton
-            type="1"
-            @click.native="validate"
-          >
-            Confirm
-          </MainButton>
-        </div>
-      </div>
-    </template>
-  </StartPage>
+      </template>
+    </StartPage>
+  </section>
 </template>
 
 <script>

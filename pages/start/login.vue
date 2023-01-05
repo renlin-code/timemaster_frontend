@@ -1,69 +1,71 @@
 <template>
-  <StartPage class="login"
-    animated
-  >
-    <template #title>
-      Welcome back
-    </template>
+  <section>
+    <StartPage class="login"
+      animated
+    >
+      <template #title>
+        Welcome back
+      </template>
 
-    <template #inner>
-      <FormPreloader
-        v-if="pending"
-      />
-      <div class="login__form">
-        <div class="login__form-top">
-          <h2 class="login__form-subtitle timemaster-subtitle">
-            Please enter your email and password
-          </h2>
-          <div class="login__form-inputs">
-            <StartInput
-              required
-              type="email"
-              placeholder="Email"
-              v-model="dataForPost.email"
-              :trigger="validateTrigger"
-              @validate="validateResponse"
-              :injectedErrorMessage="emailErrorMessage"
-            />
-            <StartInput
-              required
-              type="password"
-              placeholder="Password"
-              v-model="dataForPost.password"
-              :trigger="validateTrigger"
-              @validate="validateResponse"
-              :injectedErrorMessage="passwordErrorMessage"
-            />
+      <template #inner>
+        <FormPreloader
+          v-if="pending"
+        />
+        <div class="login__form">
+          <div class="login__form-top">
+            <h2 class="login__form-subtitle timemaster-subtitle">
+              Please enter your email and password
+            </h2>
+            <div class="login__form-inputs">
+              <StartInput
+                required
+                type="email"
+                placeholder="Email"
+                v-model="dataForPost.email"
+                :trigger="validateTrigger"
+                @validate="validateResponse"
+                :injectedErrorMessage="emailErrorMessage"
+              />
+              <StartInput
+                required
+                type="password"
+                placeholder="Password"
+                v-model="dataForPost.password"
+                :trigger="validateTrigger"
+                @validate="validateResponse"
+                :injectedErrorMessage="passwordErrorMessage"
+              />
+            </div>
+            <NuxtLink to="/start/recovery" class="login__form-recovery timemaster-caption">
+                  Forgot password?
+            </NuxtLink>
           </div>
-          <NuxtLink to="/start/recovery" class="login__form-recovery timemaster-caption">
-                Forgot password?
-          </NuxtLink>
-        </div>
-        <div class="login__form-bottom">
-          <MainButton
-            type="1"
-            @click.native="validate"
-          >
-            Log in
-          </MainButton>
-          <div class="login__form-separator">
-            <div class="login__form-separator-line"></div>
-              <span class="timemaster-subtitle">
-                or
-              </span>
-            <div class="login__form-separator-line"></div>
-          </div>
-          <NuxtLink to="/start/signup">
+          <div class="login__form-bottom">
             <MainButton
-              type="2"
+              type="1"
+              @click.native="validate"
             >
-              Sign up
+              Log in
             </MainButton>
-          </NuxtLink>
+            <div class="login__form-separator">
+              <div class="login__form-separator-line"></div>
+                <span class="timemaster-subtitle">
+                  or
+                </span>
+              <div class="login__form-separator-line"></div>
+            </div>
+            <NuxtLink to="/start/signup">
+              <MainButton
+                type="2"
+              >
+                Sign up
+              </MainButton>
+            </NuxtLink>
+          </div>
         </div>
-      </div>
-    </template>
-  </StartPage>
+      </template>
+    </StartPage>
+  </section>
 </template>
 
 <script>

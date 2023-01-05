@@ -52,7 +52,6 @@ export default {
       const tasks = this.category.tasks;
       const totalTasks = tasks.length;
       const totalDoneTasks = tasks.filter(task => task.done == true).length;
-      console.log("totalTasks", totalTasks)
       return `${(totalDoneTasks * 100) / totalTasks}%`;
     }
   }
