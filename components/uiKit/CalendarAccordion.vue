@@ -147,7 +147,6 @@ export default {
 
   created() {
     this.calendarInit();
-    this.selectDate(this.date.getDate());
   },
 }
 </script>

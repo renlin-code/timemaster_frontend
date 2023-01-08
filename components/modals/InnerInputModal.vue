@@ -1,42 +1,40 @@
 <template>
-  <Transition name="fade">
-    <div class="input-modal-layout">
-      <div class="input-modal-layout__bg"
-        :class="{ 'input-modal-layout__bg--blur' : blur }"
-      ></div>
+  <div class="input-modal-layout">
+    <div class="input-modal-layout__bg"
+      :class="{ 'input-modal-layout__bg--blur' : blur }"
+    ></div>
 
-      <div class="input-modal-layout__content">
-      <button class="input-modal-layout__close"
-        @click="$emit('close')"
+    <div class="input-modal-layout__content">
+    <button class="input-modal-layout__close"
+      @click="$emit('close')"
+    >
+      <close />
+    </button>
+      <textarea class="input-modal-layout__textarea timemaster-title main-content-wrapper"
+        :maxlength="maxlength"
+        :value="value"
+        :placeholder="placeholder"
+        @input="$emit('input', $event.target.value)"
+      ></textarea>
+
+      <div class="input-modal-layout__static-block"
+        :class="{'input-modal-layout__static-block--empty' : !staticContentHeight}"
+        :style="`height: ${staticContentHeight}rem;`"
       >
-        <close />
-      </button>
-        <textarea class="input-modal-layout__textarea timemaster-title main-content-wrapper"
-          :maxlength="maxlength"
-          :value="value"
-          :placeholder="placeholder"
-          @input="$emit('input', $event.target.value)"
-        ></textarea>
+        <slot name="static-content"/>
+      </div>
 
-        <div class="input-modal-layout__static-block"
-          :class="{'input-modal-layout__static-block--empty' : !staticContentHeight}"
-          :style="`height: ${staticContentHeight}rem;`"
-        >
-          <slot name="static-content"/>
-        </div>
+      <div class="input-modal-layout__scroll-block"
+        :style="`height: calc(100vh - 256rem - ${staticContentHeight}rem);`"
+      >
+        <slot name="scroll-content" />
+      </div>
 
-        <div class="input-modal-layout__scroll-block"
-          :style="`height: calc(100vh - 256rem - ${staticContentHeight}rem);`"
-        >
-          <slot name="scroll-content" />
-        </div>
-
-        <div class="input-modal-layout__button">
-          <slot name="button" />
-        </div>
+      <div class="input-modal-layout__button">
+        <slot name="button" />
       </div>
     </div>
-  </Transition>
+  </div>
 </template>
 
 <script>

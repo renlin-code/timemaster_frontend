@@ -3,9 +3,10 @@
     <InnerPage class="home-page"
     :blur="!noTasks"
     :staticContentHeight="200"
-    v-if="profileData"
   >
-      <template #title>
+      <template #title
+        v-if="profileData.name"
+      >
         {{ `Hello, ${profileData.name}!` }}
       </template>
 
@@ -19,12 +20,31 @@
 
       <template #scroll-content>
         <h2>Today’s tasks</h2>
+        <ul class="tasks-list">
+          <Task
+            v-for="task in pendingTasks"
+            :task="task"
+          />
+        </ul>
+
+        <h2
+          v-if="doneTasks.length !== 0"
+        >Done</h2>
+        <div class="tasks-list"
+          v-if="doneTasks.length !== 0"
+        >
+          <Task
+            v-for="task in doneTasks"
+            :task="task"
+          />
+        </div>
+
       </template>
 
       <template #button>
       <AddTaskButton
         :animated="noTasks"
-        @click.native="$nuxt.$emit('openModalFromHome')"
+        @click.native="$nuxt.$emit('openTaskModalFromHome')"
       />
       </template>
     </InnerPage>
@@ -32,20 +52,23 @@
 </template>
 
 <script>
+import { startCategoriesMixin } from "~/mixins/startCategoriesMixin";
+
 import InnerPage from '~/components/layout/InnerPage.vue';
 import CategoryCard from '~/components/uiKit/CategoryCard.vue';
 import CategoriesCarousell from '~/components/complexItems/CategoriesCarousell.vue';
 import AddTaskButton from '~/components/buttons/AddTaskButton.vue';
-import { startCategoriesMixin } from "~/mixins/startCategoriesMixin";
 import InnerInputModal from '~/components/modals/InnerInputModal.vue';
+import Task from '~/components/uiKit/Task.vue';
 
 export default {
     name: "IndexPage",
     layout: "inner",
-    components: { InnerPage, CategoryCard, CategoriesCarousell, AddTaskButton, InnerInputModal },
+    components: { InnerPage, CategoryCard, CategoriesCarousell, AddTaskButton, InnerInputModal, Task },
     mixins: [startCategoriesMixin()],
     data: () => ({
-      profileData: null
+      profileData: {},
+      todaysTasks: []
     }),
     methods: {
       async fetchProfileData() {
@@ -57,8 +80,19 @@ export default {
           } else {
             this.profileData = data;
           }
+        } catch (error) {
+          console.error(error)
+          if (error.response.data.statusCode == 401) {
+            this.$router.push("/start/login");
+          } else {
+            this.$router.push("/start");
+          }
+        }
+      },
 
-          console.log(this.profileData);
+      async fetchTodayTasks() {
+        try {
+          this.todaysTasks = await this.$axios.$get(`/profile/my-tasks?date=${this.todaysDate}`);
         } catch (error) {
           console.error(error)
           if (error.response.data.statusCode == 401) {
@@ -70,18 +104,48 @@ export default {
       }
     },
     computed: {
+      todaysDate() {
+        const fullDate = new Date();
+        const date = fullDate.getDate() < 10 ? `0${fullDate.getDate()}` : fullDate.getDate();
+        const month = fullDate.getMonth() < 9 ? `0${fullDate.getMonth() + 1}` : fullDate.getMonth() + 1;
+        const year = fullDate.getFullYear();
+
+        return `${year}-${month}-${date}`;
+      },
       noTasks() {
-        return this.profileData.categories.every(i => i.tasks.length === 0);
+        return this.todaysTasks.length === 0;
+      },
+      pendingTasks() {
+        return this.todaysTasks.filter(i => !i.done);
+      },
+      doneTasks() {
+        return this.todaysTasks.filter(i => i.done);
       }
     },
 
-    created() {
+    async created() {
       const authToken = localStorage.getItem("authToken");
       if (!authToken) {
         this.$router.push("/start/login");
       } else {
-        this.fetchProfileData();
+        await this.fetchProfileData();
+        await this.fetchTodayTasks();
       }
+    },
+    mounted() {
+      this.$nuxt.$on("refreshHome", () => {
+        this.fetchProfileData();
+        this.fetchTodayTasks();
+      })
     }
   }
 </script>
+
+<style scoped lang="scss">
+  .tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15rem;
+    margin-bottom: 40rem;
+  }
+</style>

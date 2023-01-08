@@ -109,7 +109,7 @@ export default {
       }
     }
   },
-  created() {
+  mounted() {
     const queryToken = this.$route.query.token;
     if (!queryToken) {
       this.$nuxt.error("404");

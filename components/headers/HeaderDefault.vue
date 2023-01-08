@@ -7,7 +7,9 @@
         <burger />
       </button>
       <button class="header__search">
-        <search />
+        <search
+          @click.native="$nuxt.$emit('openTaskModal')"
+        />
       </button>
     </div>
   </div>

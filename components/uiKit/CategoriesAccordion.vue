@@ -32,7 +32,7 @@ export default {
   components: {categories, categoryCircle},
   data: () => ({
     categories: [],
-    selected: 0,
+    selected: null,
     open: false
   }),
   methods: {
@@ -40,7 +40,7 @@ export default {
       try {
         this.categories = await this.$axios.$get("/profile/my-categories");
       } catch (error) {
-        console.error(error)
+        console.error(error.response.data.message)
       }
     },
     select(category) {
@@ -55,7 +55,6 @@ export default {
   },
   async created() {
     await this.fetchCategories();
-    this.select(this.categories[0])
   },
 }
 </script>

@@ -168,7 +168,7 @@ export default {
       width: 100%;
       padding: 0 32rem;
       background: transparent;
-      color: $light_gray;
+      color: $black;
       font-family: 'Poppins', sans-serif;
       font-size: 20rem;
       line-height: 30rem;
