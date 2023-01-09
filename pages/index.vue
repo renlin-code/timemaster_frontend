@@ -3,6 +3,7 @@
     <InnerPage class="home-page"
     :blur="!noTasks"
     :staticContentHeight="200"
+    :preloader="preloader"
   >
       <template #title
         v-if="profileData.name"
@@ -68,6 +69,7 @@ export default {
     mixins: [startCategoriesMixin()],
     data: () => ({
       profileData: {},
+      preloader: true,
       todaysTasks: []
     }),
     methods: {
@@ -88,6 +90,7 @@ export default {
             this.$router.push("/start");
           }
         }
+        this.preloader = false;
       },
 
       async fetchTodayTasks() {

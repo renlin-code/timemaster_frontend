@@ -1,5 +1,11 @@
 <template>
   <div class="inner-page-layout">
+
+    <MainPreloader
+      :render="preloader"
+      :minTime="1000"
+    />
+
     <div class="inner-page-layout__bg"
       :class="{ 'inner-page-layout__bg--blur' : blur }"
     ></div>
@@ -30,18 +36,25 @@
 </template>
 
 <script>
+import MainPreloader from '../preloaders/MainPreloader.vue';
+
 export default {
   name: "StartPage",
   props: {
-    blur: {
+    preloader: {
       type: Boolean,
-      default: false
+      default: true
+    },
+    blur: {
+        type: Boolean,
+        default: false
     },
     staticContentHeight: {
       type: Number,
       default: 0
     }
-  }
+  },
+  components: { MainPreloader }
 }
 </script>
 

@@ -1,6 +1,8 @@
 <template>
   <Transition name="fade">
-  <div class="main-preloader">
+  <div class="main-preloader"
+    v-if="show"
+  >
     <figure class="main-preloader__figure">
       <svg class="main-preloader__figure-clock" viewBox="0 0 225 225" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path opacity="0.2" d="M112.686 224.923C174.591 224.923 224.775 174.739 224.775 112.835C224.775 50.9299 174.591 0.746277 112.686 0.746277C50.7815 0.746277 0.5979 50.9299 0.5979 112.835C0.5979 174.739 50.7815 224.923 112.686 224.923Z" fill="#263238"/>
@@ -133,8 +135,28 @@
 
 <script>
 export default {
-    name: "DesktopRejection"
+  name: "DesktopRejection",
+  props: {
+    render: {
+      type: Boolean,
+      default: true
+    },
+    minTime: {
+      type: Number,
+      default: 0
     }
+  },
+  data: () => ({
+    show: true
+  }),
+  watch: {
+    render(value) {
+      setTimeout(() => {
+        this.show = value;
+      }, this.minTime);
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
