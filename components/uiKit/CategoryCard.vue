@@ -3,7 +3,7 @@
     <div v-if="extended" class="category-card__top">
       <categories :color="category.color" />
       <edit
-        @click.native="editCategory"
+        @click.native.stop="editCategory"
       />
     </div>
     <h2 class="category-card__title timemaster-subtitle">{{ category.name }}</h2>

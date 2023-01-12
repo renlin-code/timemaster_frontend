@@ -13,9 +13,9 @@
         >
           <flag
             v-if="task.important"
-            :color="task.category.color" />
+            :color="color" />
           <task-circle v-else
-            :color="task.category.color" />
+            :color="color" />
         </span>
         <p class="task__default-text timemaster-text"
         >{{ task.name }}</p>
@@ -47,6 +47,7 @@ export default {
   name: "Task",
   components: {taskCircle, flag, trash},
   props: {
+    color: "",
     task: {
       type: Object,
       default: () => ({})

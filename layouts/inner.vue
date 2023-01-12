@@ -50,15 +50,17 @@
         :placeholder="taskPlaceholder"
         v-model="taskData.name"
         :maxlength="30"
-        v-if="showTaskModal.fromHome"
+        v-if="showTaskModal.show"
         @close="closeModal('taskModal')"
       >
         <template #scroll-content>
           <CategoriesAccordion class="inner-task-modal__categories"
+            v-if="!showTaskModal.fromCategory"
             @selectCategory="selectCategory"
           />
 
           <CalendarAccordion class="inner-task-modal__calendar"
+            v-if="!showTaskModal.fromCalendar"
             @selectDate="selectDate"
           />
 
@@ -211,7 +213,10 @@ import StartModal from '~/components/modals/StartModal.vue';
       },
 
       showTaskModal: {
-        fromHome: false
+        show: false,
+        fromHome: false,
+        fromCategory: false,
+        fromCalendar: false
       },
       taskPlaceholder: "",
       taskData: {
@@ -345,19 +350,8 @@ import StartModal from '~/components/modals/StartModal.vue';
           this.closeModal('categoryModal');
         }
       },
-      async checkIfLastCategory() {
-        try {
-          const categories = await this.$axios.$get("/profile/my-categories/");
-          this.isLastCategory = categories.length === 1;
-        } catch(error) {
-          console.error(error.response.data.message);
-        }
-      },
       async deleteCategory() {
-        await this.checkIfLastCategory();
-
-        if(this.isLastCategory) {
-        } else {
+        if(!this.isLastCategory) {
           try {
            this.pending = true;
             await this.$axios.$delete(`/profile/my-categories/${this.categoryData.id}`);
@@ -381,27 +375,19 @@ import StartModal from '~/components/modals/StartModal.vue';
       if (isNew) {
         this.$router.push("/start")
       }
-      this.checkIfLastCategory();
     },
 
     mounted() {
+      this.$nuxt.$on("lastCategory", (e) => {
+        this.isLastCategory = e;
+      })
+
       this.$nuxt.$on("refreshView", () => {
         this.searchTask(this.searchQuery);
-        this.checkIfLastCategory();
       })
 
       this.$nuxt.$on("openSearchModal", () => {
         this.showSearchModal = true;
-      })
-
-      this.$nuxt.$on("openTaskModalFromHome", (id) => {
-        if(id) {
-          this.taskData.id = id;
-          this.taskPlaceholder = "Task name";
-        } else {
-          this.taskPlaceholder = "Add new task";
-        }
-        this.showTaskModal.fromHome = true;
       })
 
       this.$nuxt.$on("openCategoryModal", (id) => {
@@ -415,6 +401,26 @@ import StartModal from '~/components/modals/StartModal.vue';
         }
         this.showCategoryModal = true;
       })
+
+      this.$nuxt.$on("openTaskModalFromHome", (id) => {
+        if(id) {
+          this.taskData.id = id;
+          this.taskPlaceholder = "Task name";
+        } else {
+          this.taskPlaceholder = "Add new task";
+        }
+        this.showTaskModal.show = true;
+        this.showTaskModal.fromHome = true;
+      })
+      this.$nuxt.$on("openTaskModalFromCategory", (categoryId) => {
+        this.taskData.categoryId = categoryId;
+        this.taskPlaceholder = "Add new task";
+        this.showTaskModal.show = true;
+        this.showTaskModal.fromCategory = true;
+      })
+    },
+    beforeDestroy() {
+      this.$nuxt.$off("refreshView")
     }
   }
 </script>

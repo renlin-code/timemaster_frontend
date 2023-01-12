@@ -13,6 +13,7 @@
             v-for="category in categories"
             :category="category"
             extended
+            @click.native="$router.push(`/categories/${category.id}`)"
           />
           <AddCategory
             @click.native="$nuxt.$emit('openCategoryModal')"
@@ -52,6 +53,11 @@ export default {
       this.preloader = false;
     }
   },
+  watch: {
+    categories(value) {
+      this.$nuxt.$emit("lastCategory", value.length === 1)
+    }
+  },
   async created() {
     const authToken = localStorage.getItem("authToken");
     if (!authToken) {
@@ -65,6 +71,9 @@ export default {
         this.fetchCategories();
       }
     })
+  },
+  beforeDestroy() {
+    this.$nuxt.$off("refreshView")
   }
 }
 </script>

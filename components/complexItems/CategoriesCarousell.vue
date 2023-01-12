@@ -7,6 +7,7 @@
         >
           <CategoryCard class="carousell__category"
             :category="category"
+            @click.native="$router.push(`categories/${category.id}`)"
           />
         </li>
       </ul>

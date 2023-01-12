@@ -24,6 +24,7 @@
         <ul class="tasks-list">
           <Task
             v-for="task in pendingTasks"
+            :color="task.category.color"
             :task="task"
           />
         </ul>
@@ -31,22 +32,23 @@
         <h2
           v-if="doneTasks.length !== 0"
         >Done</h2>
-        <div class="tasks-list"
+        <ul class="tasks-list"
           v-if="doneTasks.length !== 0"
         >
           <Task
             v-for="task in doneTasks"
+            :color="task.category.color"
             :task="task"
           />
-        </div>
+        </ul>
 
       </template>
 
       <template #button>
-      <AddTaskButton
-        :animated="noTasks"
-        @click.native="$nuxt.$emit('openTaskModalFromHome')"
-      />
+        <AddTaskButton
+          :animated="noTasks"
+          @click.native="$nuxt.$emit('openTaskModalFromHome')"
+        />
       </template>
     </InnerPage>
   </section>
@@ -72,6 +74,25 @@ export default {
       preloader: true,
       todaysTasks: []
     }),
+    computed: {
+      todaysDate() {
+        const fullDate = new Date();
+        const date = fullDate.getDate() < 10 ? `0${fullDate.getDate()}` : fullDate.getDate();
+        const month = fullDate.getMonth() < 9 ? `0${fullDate.getMonth() + 1}` : fullDate.getMonth() + 1;
+        const year = fullDate.getFullYear();
+
+        return `${year}-${month}-${date}`;
+      },
+      noTasks() {
+        return this.todaysTasks.length === 0;
+      },
+      pendingTasks() {
+        return this.todaysTasks.filter(i => !i.done);
+      },
+      doneTasks() {
+        return this.todaysTasks.filter(i => i.done);
+      }
+    },
     methods: {
       async fetchProfileData() {
         try {
@@ -106,26 +127,6 @@ export default {
         }
       }
     },
-    computed: {
-      todaysDate() {
-        const fullDate = new Date();
-        const date = fullDate.getDate() < 10 ? `0${fullDate.getDate()}` : fullDate.getDate();
-        const month = fullDate.getMonth() < 9 ? `0${fullDate.getMonth() + 1}` : fullDate.getMonth() + 1;
-        const year = fullDate.getFullYear();
-
-        return `${year}-${month}-${date}`;
-      },
-      noTasks() {
-        return this.todaysTasks.length === 0;
-      },
-      pendingTasks() {
-        return this.todaysTasks.filter(i => !i.done);
-      },
-      doneTasks() {
-        return this.todaysTasks.filter(i => i.done);
-      }
-    },
-
     async created() {
       const authToken = localStorage.getItem("authToken");
       if (!authToken) {
@@ -139,6 +140,9 @@ export default {
         this.fetchProfileData();
         this.fetchTodayTasks();
       })
+    },
+    beforeDestroy() {
+      this.$nuxt.$off("refreshView")
     }
   }
 </script>
