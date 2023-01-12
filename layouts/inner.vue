@@ -47,7 +47,7 @@
     <Transition name="fade">
       <InnerInputModal class="inner-task-modal"
         blur
-        placeholder="Add new task"
+        :placeholder="taskPlaceholder"
         v-model="taskData.name"
         :maxlength="30"
         v-if="showTaskModal.fromHome"
@@ -75,6 +75,51 @@
       </InnerInputModal>
     </Transition>
 
+    <Transition name="fade">
+      <InnerInputModal class="inner-category-modal"
+        blur
+        :placeholder="categoryPlaceholder"
+        v-model="categoryData.name"
+        :maxlength="10"
+        v-if="showCategoryModal"
+        @close="closeModal('categoryModal')"
+      >
+        <template #scroll-content>
+          <ColorPicker class="inner-category-modal__color-picker"
+            @selectColor="selectColor"
+          />
+          <DeleteCategory class="inner-category-modal__delete"
+            v-if="editCategory"
+            @click.native="showDeleteCategoryModal = true"
+          />
+          <Transition name="fade">
+            <StartModal
+              :twoButtons="!isLastCategory"
+              v-if="showDeleteCategoryModal"
+              @close="showDeleteCategoryModal = false"
+              @action="deleteCategory"
+            >
+              <template #main-text>
+                {{ deleteModalText }}
+              </template>
+              <template #primary-button>
+                {{ deleteModalButtonText }}
+              </template>
+              <template #secondary-button>
+                Yes
+              </template>
+            </StartModal>
+          </Transition>
+
+        </template>
+
+        <template #button>
+          <OkButton
+            @click.native="submitCategory"
+          />
+        </template>
+      </InnerInputModal>
+    </Transition>
 
 
 
@@ -141,19 +186,34 @@ import ImportantButton from '~/components/buttons/ImportantButton.vue';
 import FormPreloader from '~/components/preloaders/FormPreloader.vue';
 import Task from '~/components/uiKit/Task.vue';
 import NoResults from '~/components/figures/NoResults.vue';
+import ColorPicker from '~/components/uiKit/ColorPicker.vue';
+import DeleteCategory from '~/components/buttons/DeleteCategory.vue';
+import StartModal from '~/components/modals/StartModal.vue';
 
 
   export default {
-    components: { DesktopRejetion, HeaderDefault, NavMenu, InnerInputModal, OkButton, CategoriesAccordion, CalendarAccordion, ImportantButton, FormPreloader, Task, NoResults },
+    components: { DesktopRejetion, HeaderDefault, NavMenu, InnerInputModal, OkButton, CategoriesAccordion, CalendarAccordion, ImportantButton, FormPreloader, Task, NoResults, ColorPicker, DeleteCategory, StartModal },
     data: () => ({
       frontOpen: false,
+
       showSearchModal: false,
-      showTaskModal: {
-        fromHome: false
-      },
       searchQuery: "",
       searchResults: [],
 
+      showCategoryModal: false,
+      editCategory: false,
+      isLastCategory: false,
+      showDeleteCategoryModal: false,
+      categoryPlaceholder: "",
+      categoryData: {
+        name: "",
+        color: ""
+      },
+
+      showTaskModal: {
+        fromHome: false
+      },
+      taskPlaceholder: "",
       taskData: {
         name: "",
         date: "",
@@ -163,6 +223,22 @@ import NoResults from '~/components/figures/NoResults.vue';
 
       pending: false
     }),
+    computed: {
+      deleteModalText() {
+        if(this.isLastCategory) {
+          return "You can't delete your last category. You need at least one category"
+        } else {
+          return "Are you sure you want to delete this category? If you delete this category, you’ll lose all the tasks of this category"
+        }
+      },
+      deleteModalButtonText() {
+        if(this.isLastCategory) {
+          return "Ok"
+        } else {
+          return "No"
+        }
+      }
+    },
     methods: {
       async searchTask(query) {
         try {
@@ -184,6 +260,10 @@ import NoResults from '~/components/figures/NoResults.vue';
               this.showSearchModal = false;
               this.searchQuery = "";
               break;
+            case "categoryModal":
+              this.showCategoryModal = false;
+              this.categoryData = {};
+              break;
             case "taskModal":
               for (let key in this.showTaskModal) {
                 this.showTaskModal[key] = false;
@@ -193,13 +273,19 @@ import NoResults from '~/components/figures/NoResults.vue';
             default:
               this.showSearchModal = false;
               this.searchQuery = "";
+              this.showCategoryModal = false;
               for (let key in this.showTaskModal) {
                 this.showTaskModal[key] = false;
               }
+              this.categoryData = {};
               this.taskData = {};
               break;
           }
-        this.$nuxt.$emit("refreshHome");
+        this.$nuxt.$emit("refreshView");
+      },
+
+      selectColor(color) {
+        this.categoryData.color = color;
       },
 
       selectCategory(id) {
@@ -213,15 +299,7 @@ import NoResults from '~/components/figures/NoResults.vue';
       },
       async submitTask() {
         if (this.taskData.name && this.taskData.categoryId && this.taskData.date) {
-          if(!this.taskData.id) {
-            try {
-              this.pending = true;
-              await this.$axios.$post("/profile/my-tasks", this.taskData);
-            } catch (error) {
-              console.error(error.response.data.message);
-            }
-          }
-          else {
+          if(this.taskData.id) {
             const taskId = this.taskData.id;
             delete this.taskData.id;
             try {
@@ -231,8 +309,64 @@ import NoResults from '~/components/figures/NoResults.vue';
               console.error(error.response.data.message);
             }
           }
+          else {
+            try {
+              this.pending = true;
+              await this.$axios.$post("/profile/my-tasks", this.taskData);
+            } catch (error) {
+              console.error(error.response.data.message);
+            }
+          }
           this.pending = false;
           this.closeModal('taskModal');
+        }
+      },
+      async submitCategory() {
+        if (this.categoryData.name && this.categoryData.color) {
+          if(this.categoryData.id) {
+            const categoryId = this.categoryData.id;
+            delete this.categoryData.id;
+            try {
+              this.pending = true;
+              await this.$axios.$patch(`/profile/my-categories/${categoryId}`, this.categoryData);
+            } catch (error) {
+              console.error(error.response.data.message);
+            }
+          }
+          else {
+            try {
+              this.pending = true;
+              await this.$axios.$post("/profile/my-categories", this.categoryData);
+            } catch (error) {
+              console.error(error.response.data.message);
+            }
+          }
+          this.pending = false;
+          this.closeModal('categoryModal');
+        }
+      },
+      async checkIfLastCategory() {
+        try {
+          const categories = await this.$axios.$get("/profile/my-categories/");
+          this.isLastCategory = categories.length === 1;
+        } catch(error) {
+          console.error(error.response.data.message);
+        }
+      },
+      async deleteCategory() {
+        await this.checkIfLastCategory();
+
+        if(this.isLastCategory) {
+        } else {
+          try {
+           this.pending = true;
+            await this.$axios.$delete(`/profile/my-categories/${this.categoryData.id}`);
+          } catch (error) {
+            console.error(error.response.data.message);
+          }
+          this.pending = false;
+          this.showDeleteCategoryModal = false;
+          this.closeModal('categoryModal');
         }
       }
     },
@@ -247,22 +381,39 @@ import NoResults from '~/components/figures/NoResults.vue';
       if (isNew) {
         this.$router.push("/start")
       }
+      this.checkIfLastCategory();
     },
 
     mounted() {
-      this.$nuxt.$on("refreshHome", () => {
+      this.$nuxt.$on("refreshView", () => {
         this.searchTask(this.searchQuery);
+        this.checkIfLastCategory();
       })
 
-      this.$nuxt.$on("openTaskModal", () => {
+      this.$nuxt.$on("openSearchModal", () => {
         this.showSearchModal = true;
       })
 
       this.$nuxt.$on("openTaskModalFromHome", (id) => {
         if(id) {
           this.taskData.id = id;
+          this.taskPlaceholder = "Task name";
+        } else {
+          this.taskPlaceholder = "Add new task";
         }
         this.showTaskModal.fromHome = true;
+      })
+
+      this.$nuxt.$on("openCategoryModal", (id) => {
+        if(id) {
+          this.categoryData.id = id;
+          this.categoryPlaceholder = "Category name";
+          this.editCategory = true;
+        } else {
+          this.categoryPlaceholder = "Add new category";
+          this.editCategory = false;
+        }
+        this.showCategoryModal = true;
       })
     }
   }
@@ -411,6 +562,12 @@ import NoResults from '~/components/figures/NoResults.vue';
       position: absolute;
       left: 0;
       top: 0;
+    }
+  }
+
+  .inner-category-modal {
+    &__color-picker {
+      margin-bottom: 60rem;
     }
   }
 

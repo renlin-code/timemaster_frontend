@@ -1,10 +1,10 @@
 <template>
   <section>
     <InnerPage class="home-page"
-    :blur="!noTasks"
-    :staticContentHeight="200"
-    :preloader="preloader"
-  >
+      :blur="!noTasks"
+      :staticContentHeight="200"
+      :preloader="preloader"
+    >
       <template #title
         v-if="profileData.name"
       >
@@ -134,9 +134,8 @@ export default {
         await this.fetchProfileData();
         await this.fetchTodayTasks();
       }
-    },
-    mounted() {
-      this.$nuxt.$on("refreshHome", () => {
+
+      this.$nuxt.$on("refreshView", () => {
         this.fetchProfileData();
         this.fetchTodayTasks();
       })

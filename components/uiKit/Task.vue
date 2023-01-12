@@ -78,7 +78,7 @@ export default {
         await this.$axios.$patch(`/profile/my-tasks/${this.task.id}`, {
         done: !this.task.done
         })
-        this.$nuxt.$emit("refreshHome");
+        this.$nuxt.$emit("refreshView");
       } catch (error) {
         console.error(error.response.data.message)
       }
@@ -89,7 +89,7 @@ export default {
     async deleteTask() {
       try {
         await this.$axios.$delete(`/profile/my-tasks/${this.task.id}`)
-        this.$nuxt.$emit("refreshHome");
+        this.$nuxt.$emit("refreshView");
       } catch (error) {
         console.error(error.response.data.message)
       }

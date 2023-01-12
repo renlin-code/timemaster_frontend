@@ -8,7 +8,7 @@
       </button>
       <button class="header__search">
         <search
-          @click.native="$nuxt.$emit('openTaskModal')"
+          @click.native="$nuxt.$emit('openSearchModal')"
         />
       </button>
     </div>

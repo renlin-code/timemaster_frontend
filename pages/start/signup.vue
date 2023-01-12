@@ -8,18 +8,19 @@
       </template>
 
       <template #inner>
-
-        <StartModal
-          v-if=showModal
-          @close="showModal = false"
-        >
-          <template #main-text>
-            Please check out your email, we have sent you a confirmation email
-          </template>
-          <template #button-text>
-            Ok
-          </template>
-        </StartModal>
+        <Transition name="fade">
+          <StartModal
+            v-if=showModal
+            @close="showModal = false"
+          >
+            <template #main-text>
+              Please check out your email, we have sent you a confirmation email
+            </template>
+            <template #primary-button>
+              Ok
+            </template>
+          </StartModal>
+        </Transition>
 
         <FormPreloader
           v-if="pending"

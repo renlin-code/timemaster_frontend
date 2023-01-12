@@ -2,7 +2,9 @@
   <div class="category-card">
     <div v-if="extended" class="category-card__top">
       <categories :color="category.color" />
-      <edit />
+      <edit
+        @click.native="editCategory"
+      />
     </div>
     <h2 class="category-card__title timemaster-subtitle">{{ category.name }}</h2>
     <span class="category-card__tasks timemaster-caption">{{ taskCount }}</span>
@@ -76,6 +78,11 @@ export default {
       const totalTasks = tasks.length;
       const totalDoneTasks = tasks.filter(task => task.done == true).length;
       return `${(totalDoneTasks * 100) / totalTasks}%`;
+    }
+  },
+  methods: {
+    editCategory() {
+      this.$nuxt.$emit("openCategoryModal", this.category.id);
     }
   }
 }

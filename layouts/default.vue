@@ -1,10 +1,10 @@
 <template>
-  <Transition name="fade">
-    <main>
-      <DesktopRejetion />
+  <main>
+    <DesktopRejetion />
+    <Transition name="fade">
       <Nuxt />
-    </main>
-  </Transition>
+    </Transition>
+  </main>
 </template>
 
 <script>

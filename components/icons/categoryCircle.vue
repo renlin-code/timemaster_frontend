@@ -38,6 +38,7 @@ export default {
     width: 20rem;
     height: 20rem;
     border-radius: 50%;
+    transition: all 320ms ease-in-out;
     &--extended {
       width: 40rem;
       height: 40rem;
