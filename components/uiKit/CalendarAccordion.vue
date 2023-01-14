@@ -253,7 +253,7 @@ export default {
         color: $dark-gray;
       }
       &.current {
-        background-color: $main-color;
+        background-color: rgba(245, 128, 94, 0.8);
         color: $white;
       }
       &.selected {

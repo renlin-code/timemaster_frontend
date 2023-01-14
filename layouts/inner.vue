@@ -418,6 +418,12 @@ import StartModal from '~/components/modals/StartModal.vue';
         this.showTaskModal.show = true;
         this.showTaskModal.fromCategory = true;
       })
+      this.$nuxt.$on("openTaskModalFromCalendar", (date) => {
+        this.taskData.date = date;
+        this.taskPlaceholder = "Add new task";
+        this.showTaskModal.show = true;
+        this.showTaskModal.fromCalendar = true;
+      })
     },
     beforeDestroy() {
       this.$nuxt.$off("refreshView")
@@ -602,6 +608,6 @@ import StartModal from '~/components/modals/StartModal.vue';
     display: flex;
     flex-direction: column;
     gap: 15rem;
-    margin-bottom: 40rem;
+    margin-bottom: 100rem;
   }
 </style>

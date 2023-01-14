@@ -152,6 +152,6 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 15rem;
-    margin-bottom: 40rem;
+    margin-bottom: 100rem;
   }
 </style>
