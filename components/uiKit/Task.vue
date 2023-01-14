@@ -33,6 +33,9 @@
             </button>
           </div>
         </div>
+        <span class="task__default-date">
+          {{ fullDate }}
+        </span>
       </div>
     </div>
   </li>
@@ -56,6 +59,19 @@ export default {
   data: () => ({
     optionsOpen: false
   }),
+  computed: {
+    fullDate() {
+      const months = [ "Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ];
+      const days = [ "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun" ];
+
+      const newDate = new Date(this.task.date);
+      const day = days[newDate.getDay()];
+      const date = newDate.getDate();
+      const month = months[newDate.getMonth()];
+      const year = newDate.getFullYear();
+      return `${day}, ${month}. ${date}, ${year}`
+    }
+  },
   methods: {
     swipeHandler() {
       let touchStartX, touchEndX;
@@ -117,13 +133,24 @@ export default {
       overflow: hidden;
       min-width: 100%;
       background-color: $white;
-      padding: 15rem;
+      padding: 20rem 15rem;
       display: grid;
       grid-template-columns: 20rem auto;
       column-gap: 12rem;
       align-items: center;
       border-radius: 20rem;
       box-shadow: 0rem 2rem 2rem rgba( $black, 0.25);
+      &-date {
+        position: absolute;
+        font-family: 'Poppins', sans-serif;
+        font-size: 10rem;
+        line-height: 16rem;
+        font-weight: 400;
+        letter-spacing: -0.3rem;
+        right: 15rem;
+        bottom: 2rem;
+        color: $light_gray;
+      }
       &-icon {
         display: grid;
         place-content: center;
@@ -137,6 +164,7 @@ export default {
         overflow: hidden;
         right: 0;
         height: 100%;
+        z-index: 1;
         background-color: #ffffff;
         box-shadow: inset 2rem 0rem 2rem $main-color;
         border-radius: 22rem 0 0 22rem;
