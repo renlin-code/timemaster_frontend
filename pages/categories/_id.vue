@@ -90,8 +90,14 @@ export default {
       this.preloader = false;
     }
   },
-  created() {
-    this.fetchCategory();
+  async created() {
+    const authToken = localStorage.getItem("authToken");
+    if (!authToken) {
+      this.$router.push("/start/login");
+    } else {
+      await this.fetchCategory();
+    }
+
 
     this.$nuxt.$on("refreshView", () => {
       this.fetchCategory();

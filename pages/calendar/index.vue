@@ -82,10 +82,16 @@ export default {
         this.tasksOfTheDate = date.tasks ? date.tasks : [];
       }
     },
-    created() {
-      setTimeout(() => {
+    async created() {
+      const authToken = localStorage.getItem("authToken");
+      if (!authToken) {
+        this.$router.push("/start/login");
+      } else {
+        setTimeout(() => {
           this.preloader = false;
-      }, 0);
+        }, 0);
+      }
+
 
       this.$nuxt.$on("refreshView", () => {
         this.refreshTrigger = !this.refreshTrigger;
