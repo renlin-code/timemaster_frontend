@@ -49,3 +49,7 @@ h2, .timemaster-subtitle {
 .fade-leave-to {
   opacity: 0;
 }
+
+.menu-leave-active {
+  transition: all 320ms ease-in-out;
+}

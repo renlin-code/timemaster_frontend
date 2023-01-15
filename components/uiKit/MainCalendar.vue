@@ -1,59 +1,67 @@
 <template>
-  <div class="calendar"
-    v-if="render"
-  >
-    <div class="calendar__data">
-      <arrow-prev class="calendar__data-prev" color="#777777"
-        @click.native="prev"
+  <div>
+    <Transition name="fade">
+      <FormPreloader
+        v-if="!render"
       />
-      <span class="timemaster-subtitle">{{ `${computedCurrMonth}, ${currYear}` }}</span>
-      <arrow-next class="calendar__data-next" color="#777777"
-        @click.native="next"
-      />
-    </div>
-    <ol class="calendar__grid"
-      :class="{ 'calendar__grid--prev' : animatePrev, 'calendar__grid--next' : animateNext }"
+    </Transition>
+    <div class="calendar"
+      v-if="render"
     >
-      <li class="calendar__week-day">SU</li>
-      <li class="calendar__week-day">MO</li>
-      <li class="calendar__week-day">TU</li>
-      <li class="calendar__week-day">WE</li>
-      <li class="calendar__week-day">TH</li>
-      <li class="calendar__week-day">FR</li>
-      <li class="calendar__week-day">SA</li>
+      <div class="calendar__data">
+        <arrow-prev class="calendar__data-prev" color="#777777"
+          @click.native="prev"
+        />
+        <span class="timemaster-subtitle">{{ `${computedCurrMonth}, ${currYear}` }}</span>
+        <arrow-next class="calendar__data-next" color="#777777"
+          @click.native="next"
+        />
+      </div>
+      <ol class="calendar__grid"
+        :class="{ 'calendar__grid--prev' : animatePrev, 'calendar__grid--next' : animateNext }"
+      >
+        <li class="calendar__week-day">SU</li>
+        <li class="calendar__week-day">MO</li>
+        <li class="calendar__week-day">TU</li>
+        <li class="calendar__week-day">WE</li>
+        <li class="calendar__week-day">TH</li>
+        <li class="calendar__week-day">FR</li>
+        <li class="calendar__week-day">SA</li>
 
 
-      <li class="calendar__date out"
-        v-for="i in firstDayOfMonth"
-        @click="prev"
-      >{{ (firstDayOfMonth - lastDateOfLastMonth - i) * -1 }}</li>
+        <li class="calendar__date out"
+          v-for="i in firstDayOfMonth"
+          @click="prev"
+        >{{ (firstDayOfMonth - lastDateOfLastMonth - i) * -1 }}</li>
 
-      <li class="calendar__date"
-        v-for="i in lastDateOfMonth"
-        :class="{
-          'current' : i === date.getDate() && currMonth === new Date().getMonth() && currYear === new Date().getFullYear(),
-          'selected' : i === selectedDate,
-          'task' : monthTasks[i - 1].length !== 0
-        }"
-        @click="selectDate(i)"
-      >{{ i }}</li>
+        <li class="calendar__date"
+          v-for="i in lastDateOfMonth"
+          :class="{
+            'current' : i === date.getDate() && currMonth === new Date().getMonth() && currYear === new Date().getFullYear(),
+            'selected' : i === selectedDate,
+            'task' : monthTasks[i - 1].length !== 0
+          }"
+          @click="selectDate(i)"
+        >{{ i }}</li>
 
-      <li class="calendar__date out"
-        v-for="i in (6 - lastDayOfMonth)"
-        @click="next"
-      >{{ i }}</li>
+        <li class="calendar__date out"
+          v-for="i in (6 - lastDayOfMonth)"
+          @click="next"
+        >{{ i }}</li>
 
-    </ol>
+      </ol>
+    </div>
   </div>
 </template>
 
 <script>
 import arrowPrev from '../icons/arrowPrev.vue';
 import arrowNext from '../icons/arrowNext.vue';
+import FormPreloader from '../preloaders/FormPreloader.vue';
 
 export default {
   name: "MainCalendar",
-  components: {arrowPrev, arrowNext},
+  components: { arrowPrev, arrowNext, FormPreloader },
   props: {
     trigger: false
   },

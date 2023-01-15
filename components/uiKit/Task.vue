@@ -62,7 +62,7 @@ export default {
   computed: {
     fullDate() {
       const months = [ "Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ];
-      const days = [ "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun" ];
+      const days = [ "Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat" ];
 
       const newDate = new Date(this.task.date);
       const day = days[newDate.getDay()];
