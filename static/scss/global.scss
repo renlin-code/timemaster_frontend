@@ -40,16 +40,36 @@ h2, .timemaster-subtitle {
 
 
 //TRANSITIONS
+
+//fade
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 320ms ease-in-out;
 }
-
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
 }
 
+//list
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+//menu
 .menu-leave-active {
   transition: all 320ms ease-in-out;
+}
+
+
+
+//FLICKITY
+.flickity-viewport {
+  transition: height 360ms ease-in-out !important;
 }

@@ -113,8 +113,6 @@ export default {
 
         const authToken = res.token;
         localStorage.setItem("authToken", authToken);
-        localStorage.setItem("savedDevice", true);
-
 
         this.$router.push("/");
       } catch (error) {

@@ -76,21 +76,48 @@ export default {
         }
       },
 
+      async createStartCategories() {
+        const createCategory = async ({ name, color }) => {
+          try {
+            await this.$axios.$post("/profile/my-categories", { name, color });
+          } catch (error) {
+            console.error(error.response.data.message)
+          }
+        }
+
+        await Promise.all([
+          createCategory({
+            name: "School",
+            color: "#D75EF5"
+          }),
+          createCategory({
+            name: "Work",
+            color: "#4E9DA1"
+          }),
+          createCategory({
+            name: "Home",
+            color: "#A93EBD"
+          })
+        ])
+      },
       async submit() {
         try {
           this.pending = true;
           const res = await this.$axios.$post("/auth/confirm-email", this.dataForPost);
-          this.pending = false;
 
           const authToken = res.token;
           localStorage.setItem("authToken", authToken);
-          localStorage.setItem("savedDevice", true);
 
+          await this.createStartCategories();
+
+          this.pending = false;
           this.$router.push("/");
         } catch (error) {
           this.pending = false;
           if(error.response.data.statusCode == 401) {
             this.errorMessage = "Wrong password"
+          } else {
+            console.error(error.response.data.message);
           }
         }
       }

@@ -1,157 +1,116 @@
 <template>
   <section>
-    <InnerPage class="home-page"
-      :blur="!noTasks"
-      :staticContentHeight="200"
-      :preloader="preloader"
+    <InnerTabbedPage
+      class="home-page"
+      :staticContentHeight="280"
+      :tabsNames="['Today’s tasks', 'All tasks', 'Done tasks']"
+      :tabsLengths="tabsLengths"
     >
-      <template #title
-        v-if="profileData.name"
-      >
+      <template #title v-if="profileData.name">
         {{ `Hello, ${profileData.name}!` }}
       </template>
 
-      <template #static-content
-      >
+      <template #static-content>
         <h2>Categories</h2>
-        <CategoriesCarousell
-          :categories="profileData.categories"
-        />
+        <CategoriesCarousell :categories="profileData.categories" />
       </template>
 
-      <template #scroll-content>
-        <h2>Today’s tasks</h2>
-        <ul class="tasks-list">
-          <Task
-            v-for="task in pendingTasks"
-            :color="task.category.color"
-            :task="task"
-          />
-        </ul>
+      <template #tab1>
+        <TasksList :tasks="todaysTasks" />
+      </template>
 
-        <h2
-          v-if="doneTasks.length !== 0"
-        >Done</h2>
-        <ul class="tasks-list"
-          v-if="doneTasks.length !== 0"
-        >
-          <Task
-            v-for="task in doneTasks"
-            :color="task.category.color"
-            :task="task"
-          />
-        </ul>
+      <template #tab2>
+        <TasksList :tasks="allTasks" />
+      </template>
 
+      <template #tab3>
+        <TasksList :tasks="doneTasks" />
       </template>
 
       <template #button>
         <AddTaskButton
-          :animated="noTasks"
+          :animated="allTasks.length === 0"
           @click.native="$nuxt.$emit('openTaskModalFromHome')"
         />
       </template>
-    </InnerPage>
+    </InnerTabbedPage>
   </section>
 </template>
 
 <script>
-import { startCategoriesMixin } from "~/mixins/startCategoriesMixin";
-
-import InnerPage from '~/components/layout/InnerPage.vue';
-import CategoryCard from '~/components/uiKit/CategoryCard.vue';
-import CategoriesCarousell from '~/components/complexItems/CategoriesCarousell.vue';
-import AddTaskButton from '~/components/buttons/AddTaskButton.vue';
-import InnerInputModal from '~/components/modals/InnerInputModal.vue';
-import Task from '~/components/uiKit/Task.vue';
+import InnerTabbedPage from "~/components/layout/InnerTabbedPage.vue";
+import CategoryCard from "~/components/uiKit/CategoryCard.vue";
+import CategoriesCarousell from "~/components/complexItems/CategoriesCarousell.vue";
+import AddTaskButton from "~/components/buttons/AddTaskButton.vue";
+import InnerInputModal from "~/components/modals/InnerInputModal.vue";
+import Task from "~/components/uiKit/Task.vue";
+import TasksList from "~/components/complexItems/TasksList.vue";
 
 export default {
-    name: "IndexPage",
-    layout: "inner",
-    components: { InnerPage, CategoryCard, CategoriesCarousell, AddTaskButton, InnerInputModal, Task },
-    mixins: [startCategoriesMixin()],
-    data: () => ({
-      profileData: {},
-      preloader: true,
-      todaysTasks: []
-    }),
-    computed: {
-      todaysDate() {
-        const fullDate = new Date();
-        const date = fullDate.getDate() < 10 ? `0${fullDate.getDate()}` : fullDate.getDate();
-        const month = fullDate.getMonth() < 9 ? `0${fullDate.getMonth() + 1}` : fullDate.getMonth() + 1;
-        const year = fullDate.getFullYear();
+  name: "IndexPage",
+  layout: "inner",
+  components: {
+    InnerTabbedPage,
+    CategoryCard,
+    CategoriesCarousell,
+    AddTaskButton,
+    InnerInputModal,
+    Task,
+    TasksList,
+  },
 
-        return `${year}-${month}-${date}`;
-      },
-      noTasks() {
-        return this.todaysTasks.length === 0;
-      },
-      pendingTasks() {
-        return this.todaysTasks.filter(i => !i.done);
-      },
-      doneTasks() {
-        return this.todaysTasks.filter(i => i.done);
-      }
-    },
-    methods: {
-      async fetchProfileData() {
-        try {
-          const data = await this.$axios.$get("/profile/");
-          if(data.categories.length === 0) {
-            await this.createStartCategories();
-            this.profileData = await this.$axios.$get("/profile/");
-          } else {
-            this.profileData = data;
-          }
-        } catch (error) {
-          console.error(error)
-          if (error.response.data.statusCode == 401) {
-            this.$router.push("/start/login");
-          } else {
-            this.$router.push("/start");
-          }
-        }
-        this.preloader = false;
-      },
+  async asyncData({ $axios, redirect }) {
+    let profileData, allTasks;
 
-      async fetchTodayTasks() {
-        try {
-          this.todaysTasks = await this.$axios.$get(`/profile/my-tasks?date=${this.todaysDate}`);
-        } catch (error) {
-          console.error(error)
-          if (error.response.data.statusCode == 401) {
-            this.$router.push("/start/login");
-          } else {
-            this.$router.push("/start");
-          }
-        }
-      }
-    },
-    async created() {
-      const authToken = localStorage.getItem("authToken");
-      if (!authToken) {
-        this.$router.push("/start/login");
-      } else {
-        await this.fetchProfileData();
-        await this.fetchTodayTasks();
-      }
-
-      this.$nuxt.$on("refreshView", () => {
-        this.fetchProfileData();
-        this.fetchTodayTasks();
-      })
-    },
-    beforeDestroy() {
-      this.$nuxt.$off("refreshView")
+    try {
+      profileData = await $axios.$get("/profile");
+      allTasks = await $axios.$get("/profile/my-tasks");
+    } catch (error) {
+      console.error(error);
+      redirect("/start");
     }
-  }
-</script>
+    return { profileData, allTasks };
+  },
+  computed: {
+    todaysTasks() {
+      let todaysTasks = [];
 
-<style scoped lang="scss">
-  .tasks-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15rem;
-    margin-bottom: 100rem;
-  }
-</style>
+      const todaysDate = () => {
+        const fullDate = new Date();
+        const date =
+          fullDate.getDate() < 10 ? `0${fullDate.getDate()}` : fullDate.getDate();
+        const month =
+          fullDate.getMonth() < 9
+            ? `0${fullDate.getMonth() + 1}`
+            : fullDate.getMonth() + 1;
+        const year = fullDate.getFullYear();
+        return `${year}-${month}-${date}`;
+      };
+
+      this.allTasks.forEach((task) => {
+        if (task.date == todaysDate() && !task.done) todaysTasks.push(task);
+      });
+      return todaysTasks;
+    },
+    doneTasks() {
+      return this.allTasks.filter((i) => i.done);
+    },
+    pendingTasks() {
+      return this.allTasks.filter((i) => !i.done);
+    },
+    tabsLengths() {
+      return [this.todaysTasks.length, this.allTasks.length, this.doneTasks.length];
+    },
+  },
+
+  created() {
+    this.$nuxt.$on("refreshView", () => {
+      console.log("REFRESH");
+      this.$nuxt.refresh();
+    });
+  },
+  beforeDestroy() {
+    this.$nuxt.$off("refreshView");
+  },
+};
+</script>

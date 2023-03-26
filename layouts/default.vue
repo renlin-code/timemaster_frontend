@@ -1,6 +1,11 @@
 <template>
   <main>
     <DesktopRejetion />
+    <MainPreloader
+      :render="preloader"
+      :minTime="1000"
+    />
+
     <Transition name="fade">
       <Nuxt />
     </Transition>
@@ -8,10 +13,17 @@
 </template>
 
 <script>
-import DesktopRejetion from '~/components/others/DesktopRejetion.vue';
+  import DesktopRejetion from '~/components/others/DesktopRejetion.vue';
+  import MainPreloader from '~/components/preloaders/MainPreloader.vue';
 
   export default {
-    components: { DesktopRejetion }
+    components: { DesktopRejetion, MainPreloader },
+    data: () => ({
+      preloader: true
+    }),
+    mounted() {
+      this.preloader = false
+    },
   }
 </script>
 

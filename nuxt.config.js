@@ -15,13 +15,19 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ],
     script: [
-      {src: "/js/rem.js", ssr: false}
+      {src: "/js/rem.js", ssr: false},
+      {
+        src: '/js/flickity.pkgd.min.js',
+        ssr: false,
+        body: true
+      },
     ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    '~/static/scss/global.scss'
+    '~/static/scss/global.scss',
+    '@/assets/css/flickity.min.css'
   ],
 
   styleResources: {
