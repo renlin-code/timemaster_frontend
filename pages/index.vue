@@ -1,7 +1,6 @@
 <template>
-  <section>
+  <section class="home-page">
     <InnerTabbedPage
-      class="home-page"
       :staticContentHeight="280"
       :tabsNames="['Today’s tasks', 'Pending', 'Done']"
       :tabsLengths="tabsLengths"
@@ -16,21 +15,42 @@
       </template>
 
       <template #tab1>
-        <TasksList :tasks="todaysTasks" />
+        <TransitionGroup name="list" class="tasks-list" tag="ul">
+          <Task
+            v-for="task in todaysTasks"
+            :color="task.category.color"
+            :task="task"
+            :key="task.id"
+          />
+        </TransitionGroup>
       </template>
 
       <template #tab2>
-        <TasksList :tasks="pendingTasks" />
+        <TransitionGroup name="list" class="tasks-list" tag="ul">
+          <Task
+            v-for="task in pendingTasks"
+            :color="task.category.color"
+            :task="task"
+            :key="task.id"
+          />
+        </TransitionGroup>
       </template>
 
       <template #tab3>
-        <TasksList :tasks="doneTasks" />
+        <TransitionGroup name="list" class="tasks-list" tag="ul">
+          <Task
+            v-for="task in doneTasks"
+            :color="task.category.color"
+            :task="task"
+            :key="task.id"
+          />
+        </TransitionGroup>
       </template>
 
       <template #button>
         <AddTaskButton
           :animated="allTasks.length === 0"
-          @click.native="$nuxt.$emit('openTaskModalFromHome')"
+          @addTask="$nuxt.$emit('openTaskModalFromHome')"
         />
       </template>
     </InnerTabbedPage>
@@ -44,7 +64,6 @@ import CategoriesCarousell from "~/components/complexItems/CategoriesCarousell.v
 import AddTaskButton from "~/components/buttons/AddTaskButton.vue";
 import InnerInputModal from "~/components/modals/InnerInputModal.vue";
 import Task from "~/components/uiKit/Task.vue";
-import TasksList from "~/components/complexItems/TasksList.vue";
 
 export default {
   name: "IndexPage",
@@ -56,7 +75,6 @@ export default {
     AddTaskButton,
     InnerInputModal,
     Task,
-    TasksList,
   },
 
   async asyncData({ $axios, redirect }) {
@@ -85,11 +103,11 @@ export default {
     todaysTasks() {
       return this.allTasks.filter((task) => task.date == this.todaysDate);
     },
-    doneTasks() {
-      return this.allTasks.filter((task) => task.done);
-    },
     pendingTasks() {
       return this.allTasks.filter((task) => !task.done);
+    },
+    doneTasks() {
+      return this.allTasks.filter((task) => task.done);
     },
     tabsLengths() {
       return [this.todaysTasks.length, this.pendingTasks.length, this.doneTasks.length];
