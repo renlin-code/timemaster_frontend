@@ -88,18 +88,14 @@ export default {
       return this.tabsLengths[this.selected] !== 0;
     },
   },
-  created() {
+  mounted() {
     this.$nuxt.$on("refreshView", () => {
       console.log("REFRESH");
       this.flkty.resize();
     });
-  },
-  mounted() {
+
     this.flickityInit();
     this.selectTab(0);
-  },
-  beforeDestroy() {
-    this.$nuxt.$off("refreshView");
   },
 };
 </script>

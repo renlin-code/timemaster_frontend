@@ -3,7 +3,7 @@
     <InnerTabbedPage
       class="home-page"
       :staticContentHeight="280"
-      :tabsNames="['Today’s tasks', 'All tasks', 'Done tasks']"
+      :tabsNames="['Today’s tasks', 'Pending', 'Done']"
       :tabsLengths="tabsLengths"
     >
       <template #title v-if="profileData.name">
@@ -20,7 +20,7 @@
       </template>
 
       <template #tab2>
-        <TasksList :tasks="allTasks" />
+        <TasksList :tasks="pendingTasks" />
       </template>
 
       <template #tab3>
@@ -72,45 +72,35 @@ export default {
     return { profileData, allTasks };
   },
   computed: {
+    todaysDate() {
+      const fullDate = new Date();
+      const date =
+        fullDate.getDate() < 10 ? `0${fullDate.getDate()}` : fullDate.getDate();
+      const month =
+        fullDate.getMonth() < 9 ? `0${fullDate.getMonth() + 1}` : fullDate.getMonth() + 1;
+      const year = fullDate.getFullYear();
+      return `${year}-${month}-${date}`;
+    },
+
     todaysTasks() {
-      let todaysTasks = [];
-
-      const todaysDate = () => {
-        const fullDate = new Date();
-        const date =
-          fullDate.getDate() < 10 ? `0${fullDate.getDate()}` : fullDate.getDate();
-        const month =
-          fullDate.getMonth() < 9
-            ? `0${fullDate.getMonth() + 1}`
-            : fullDate.getMonth() + 1;
-        const year = fullDate.getFullYear();
-        return `${year}-${month}-${date}`;
-      };
-
-      this.allTasks.forEach((task) => {
-        if (task.date == todaysDate() && !task.done) todaysTasks.push(task);
-      });
-      return todaysTasks;
+      return this.allTasks.filter((task) => task.date == this.todaysDate);
     },
     doneTasks() {
-      return this.allTasks.filter((i) => i.done);
+      return this.allTasks.filter((task) => task.done);
     },
     pendingTasks() {
-      return this.allTasks.filter((i) => !i.done);
+      return this.allTasks.filter((task) => !task.done);
     },
     tabsLengths() {
-      return [this.todaysTasks.length, this.allTasks.length, this.doneTasks.length];
+      return [this.todaysTasks.length, this.pendingTasks.length, this.doneTasks.length];
     },
   },
 
-  created() {
+  mounted() {
     this.$nuxt.$on("refreshView", () => {
       console.log("REFRESH");
       this.$nuxt.refresh();
     });
-  },
-  beforeDestroy() {
-    this.$nuxt.$off("refreshView");
   },
 };
 </script>

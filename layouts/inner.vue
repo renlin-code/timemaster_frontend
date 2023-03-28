@@ -414,9 +414,6 @@ export default {
       this.showTaskModal.fromCalendar = true;
     });
   },
-  beforeDestroy() {
-    this.$nuxt.$off("refreshView");
-  },
 };
 </script>
 
