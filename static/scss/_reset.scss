@@ -44,12 +44,14 @@ table{
 input{
     -webkit-appearance: none;
     border-radius: 0;
+    font-family: 'Poppins';
 }
 
 button {
     border: none;
     background: none;
     cursor: pointer;
+    font-family: 'Poppins';
     &:focus {
         outline: none;
     }

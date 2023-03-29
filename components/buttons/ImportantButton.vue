@@ -1,10 +1,11 @@
 <template>
   <button
-    class="important-button"
-    :class="{ 'selected': selected }"
+    class="important-button timemaster-subtitle"
+    :class="{ selected: selected }"
     @click="select"
   >
     <flag :color="flagColor" />
+    Important
   </button>
 </template>
 
@@ -20,8 +21,8 @@ export default {
   methods: {
     select() {
       this.selected = !this.selected;
-      this.$emit('select', this.selected);
-    }
+      this.$emit("select", this.selected);
+    },
   },
   computed: {
     flagColor() {
@@ -30,23 +31,27 @@ export default {
   },
   created() {
     this.select();
-  }
+  },
 };
 </script>
 
 <style scoped lang="scss">
 .important-button {
-  width: 150rem;
+  width: 300rem;
   height: 70rem;
   margin: 0 auto;
-  display: grid;
-  place-content: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10rem;
   border-radius: 30rem;
   background: #ffffff;
+  color: $main-color;
   box-shadow: 0rem 2rem 2rem rgba(0, 0, 0, 0.25);
-  transition: background 320ms ease-in-out;
+  transition: all 320ms ease-in-out;
   &.selected {
     background: $main-color;
+    color: #ffffff;
   }
 }
 </style>
