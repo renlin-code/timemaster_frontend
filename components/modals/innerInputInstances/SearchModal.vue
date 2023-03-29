@@ -57,6 +57,7 @@ export default {
           this.searchResults = await this.$axios.$get(
             `/profile/search-tasks?searchQuery=${query}`
           );
+          console.log(this.searchResults);
         } else {
           this.searchResults = [];
         }

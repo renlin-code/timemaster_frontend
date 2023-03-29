@@ -1,24 +1,20 @@
 <template>
   <div>
     <Transition name="fade">
-      <FormPreloader
-        v-if="!render"
-      />
+      <FormPreloader v-if="!render" />
     </Transition>
-    <div class="calendar"
-      v-if="render"
-    >
+    <div class="calendar" v-if="render">
       <div class="calendar__data">
-        <arrow-prev class="calendar__data-prev" color="#777777"
-          @click.native="prev"
-        />
+        <arrow-prev class="calendar__data-prev" color="#777777" @click.native="prev" />
         <span class="timemaster-subtitle">{{ `${computedCurrMonth}, ${currYear}` }}</span>
-        <arrow-next class="calendar__data-next" color="#777777"
-          @click.native="next"
-        />
+        <arrow-next class="calendar__data-next" color="#777777" @click.native="next" />
       </div>
-      <ol class="calendar__grid"
-        :class="{ 'calendar__grid--prev' : animatePrev, 'calendar__grid--next' : animateNext }"
+      <ol
+        class="calendar__grid"
+        :class="{
+          'calendar__grid--prev': animatePrev,
+          'calendar__grid--next': animateNext,
+        }"
       >
         <li class="calendar__week-day">SU</li>
         <li class="calendar__week-day">MO</li>
@@ -28,42 +24,44 @@
         <li class="calendar__week-day">FR</li>
         <li class="calendar__week-day">SA</li>
 
+        <li class="calendar__date out" v-for="i in firstDayOfMonth" @click="prev">
+          {{ (firstDayOfMonth - lastDateOfLastMonth - i) * -1 }}
+        </li>
 
-        <li class="calendar__date out"
-          v-for="i in firstDayOfMonth"
-          @click="prev"
-        >{{ (firstDayOfMonth - lastDateOfLastMonth - i) * -1 }}</li>
-
-        <li class="calendar__date"
+        <li
+          class="calendar__date"
           v-for="i in lastDateOfMonth"
           :class="{
-            'current' : i === date.getDate() && currMonth === new Date().getMonth() && currYear === new Date().getFullYear(),
-            'selected' : i === selectedDate,
-            'task' : monthTasks[i - 1].length !== 0
+            current:
+              i === date.getDate() &&
+              currMonth === new Date().getMonth() &&
+              currYear === new Date().getFullYear(),
+            selected: i === selectedDate,
+            task: monthTasks[i - 1].length !== 0,
           }"
           @click="selectDate(i)"
-        >{{ i }}</li>
+        >
+          {{ i }}
+        </li>
 
-        <li class="calendar__date out"
-          v-for="i in (6 - lastDayOfMonth)"
-          @click="next"
-        >{{ i }}</li>
-
+        <li class="calendar__date out" v-for="i in 6 - lastDayOfMonth" @click="next">
+          {{ i }}
+        </li>
       </ol>
     </div>
   </div>
 </template>
 
 <script>
-import arrowPrev from '../icons/arrowPrev.vue';
-import arrowNext from '../icons/arrowNext.vue';
-import FormPreloader from '../preloaders/FormPreloader.vue';
+import arrowPrev from "../icons/arrowPrev.vue";
+import arrowNext from "../icons/arrowNext.vue";
+import FormPreloader from "../preloaders/FormPreloader.vue";
 
 export default {
   name: "MainCalendar",
   components: { arrowPrev, arrowNext, FormPreloader },
   props: {
-    trigger: false
+    trigger: false,
   },
   data: () => ({
     render: false,
@@ -75,11 +73,11 @@ export default {
     currMonth: null,
     currYear: null,
 
-    selectedDate: null
+    selectedDate: null,
   }),
   computed: {
     firstDayOfMonth() {
-      return new Date(this.currYear, this.currMonth, 1).getDay()
+      return new Date(this.currYear, this.currMonth, 1).getDay();
     },
     lastDateOfMonth() {
       return new Date(this.currYear, this.currMonth + 1, 0).getDate();
@@ -92,10 +90,23 @@ export default {
     },
 
     computedCurrMonth() {
-      const months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+      const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
 
       return months[this.currMonth];
-    }
+    },
   },
   methods: {
     calendarInit() {
@@ -104,7 +115,7 @@ export default {
       this.currYear = this.date.getFullYear();
     },
     prev() {
-      if(this.currMonth === 0) {
+      if (this.currMonth === 0) {
         this.currYear--;
         this.currMonth = 11;
       } else {
@@ -115,11 +126,11 @@ export default {
       this.animatePrev = true;
       setTimeout(() => {
         this.animatePrev = false;
-      }, 600)
+      }, 600);
       this.fetchMonthTask();
     },
     next() {
-      if(this.currMonth === 11) {
+      if (this.currMonth === 11) {
         this.currYear++;
         this.currMonth = 0;
       } else {
@@ -130,29 +141,35 @@ export default {
       this.animateNext = true;
       setTimeout(() => {
         this.animateNext = false;
-      }, 600)
+      }, 600);
       this.fetchMonthTask();
     },
     async fetchMonthTask() {
       try {
         this.render = false;
-        const month = this.currMonth < 9 ? `0${this.currMonth + 1}` : `${this.currMonth + 1}`;
-        this.monthTasks = await this.$axios.$get(`/profile/month-tasks/${this.currYear}-${month}`);
+        const month =
+          this.currMonth < 9 ? `0${this.currMonth + 1}` : `${this.currMonth + 1}`;
+        this.monthTasks = await this.$axios.$get(
+          `/profile/month-tasks/${this.currYear}-${month}`
+        );
         this.render = true;
 
         const selected = this.selectedDate;
         this.selectDate(selected);
-
-      } catch(error) {
-        console.error(error.response.data.message)
+      } catch (error) {
+        console.error(error.response.data.message);
       }
     },
     selectDate(date) {
       this.selectedDate = date;
 
-      const month = this.currMonth < 9 ? `0${this.currMonth + 1}` : `${this.currMonth + 1}`;
-      this.$emit("selectDate", {fullDate: `${this.currYear}-${month}-${date}`, tasks: this.monthTasks[date - 1]});
-    }
+      const month =
+        this.currMonth < 9 ? `0${this.currMonth + 1}` : `${this.currMonth + 1}`;
+      this.$emit("selectDate", {
+        fullDate: `${this.currYear}-${month}-${date}`,
+        tasks: this.monthTasks[date - 1],
+      });
+    },
   },
   watch: {
     selectedDate() {
@@ -160,14 +177,14 @@ export default {
     },
     trigger() {
       this.fetchMonthTask();
-    }
+    },
   },
   async created() {
     this.calendarInit();
     await this.fetchMonthTask();
-    this.selectDate(this.date.getDate())
-  }
-}
+    this.selectDate(this.date.getDate());
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -220,16 +237,15 @@ export default {
         }
       }
     }
-
   }
   &__week-day {
     font-size: 10rem;
     line-height: 12.5rem;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     color: $dark-gray;
 
     &:first-child {
-      color: #DE2424;
+      color: #de2424;
     }
   }
   &__date {
@@ -237,7 +253,7 @@ export default {
     height: 100%;
     font-size: 18rem;
     line-height: 27rem;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     display: grid;
     place-content: center;
     border-radius: 5rem;
@@ -248,14 +264,14 @@ export default {
       color: $dark-gray;
     }
     &.task {
-      background: rgba(197, 226, 244, 0.3);
+      border-color: $main-color;
     }
     &.current {
-      background-color: rgba(245, 128, 94, 0.8);
-      color: $white;
+      background: rgba(197, 226, 244, 0.3);
     }
     &.selected {
-      border-color: $main-color;
+      background-color: rgba(245, 128, 94, 0.8);
+      color: $white;
     }
   }
 }

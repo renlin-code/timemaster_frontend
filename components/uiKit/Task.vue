@@ -12,8 +12,8 @@
     <div class="task__wrapper">
       <div class="task__default">
         <span class="task__default-icon">
-          <flag v-if="task.important" :color="color" />
-          <task-circle v-else :color="color" />
+          <flag v-if="task.important" :color="finalColor" />
+          <task-circle v-else :color="finalColor" />
         </span>
         <p class="task__default-text timemaster-text">{{ task.name }}</p>
         <div class="task__default-options task__default-options--left">
@@ -21,6 +21,7 @@
             <button class="task__default-options-done" @click="toggleDone">
               {{ doneButtonText }}
               <svg
+                v-if="!task.done"
                 width="9rem"
                 height="7rem"
                 viewBox="0 0 9 7"
@@ -101,7 +102,10 @@ export default {
       return taskDate < todaysDate;
     },
     doneButtonText() {
-      return this.task.done ? "Undone" : "Done";
+      return this.task.done ? "Pending" : "Done";
+    },
+    finalColor() {
+      return this.color ? this.color : this.task.category.color;
     },
   },
   methods: {

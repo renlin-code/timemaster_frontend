@@ -159,9 +159,6 @@ export default {
         this.pending = false;
         this.newCategoryData.name = null;
         this.newCategoryData.color = null;
-        setTimeout(() => {
-          this.subAccordionOpen = false;
-        }, 600);
       }
     },
   },
