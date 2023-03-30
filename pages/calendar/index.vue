@@ -1,114 +1,86 @@
 <template>
-    <InnerPage class="home-page"
-      blur
-      :staticContentHeight="424"
-      :preloader="preloader"
+  <section class="calendar">
+    <InnerTabbedPage
+      :staticContentHeight="415"
+      :tabsNames="['Tasks for this day', 'Done']"
+      :tabsLengths="tabsLengths"
     >
-      <template #title>
-        Calendar
-      </template>
+      <template #title> Calendar </template>
 
       <template #static-content>
-        <div class="main-content-wrapper">
-          <MainCalendar
-            :trigger="refreshTrigger"
-            @selectDate="loadTasks"
-          />
+        <div class="calendar__calendar main-content-wrapper">
+          <MainCalendar @selectDate="loadTasks" />
         </div>
       </template>
 
-      <template #scroll-content>
-        <h2s>Tasks for this date</h2s>
-        <ul class="tasks-list">
+      <template #tab1>
+        <TransitionGroup name="list" class="tasks-list" tag="ul">
           <Task
             v-for="task in pendingTasks"
             :color="task.category.color"
             :task="task"
+            :key="task.id"
           />
-        </ul>
+        </TransitionGroup>
+      </template>
 
-        <h2
-          v-if="doneTasks.length !== 0"
-        >Done</h2>
-        <ul class="tasks-list"
-          v-if="doneTasks.length !== 0"
-        >
+      <template #tab2>
+        <TransitionGroup name="list" class="tasks-list" tag="ul">
           <Task
             v-for="task in doneTasks"
             :color="task.category.color"
             :task="task"
+            :key="task.id"
           />
-        </ul>
-
+        </TransitionGroup>
       </template>
 
       <template #button>
         <AddTaskButton
           :animated="tasksOfTheDate.length === 0"
-          @click.native="$nuxt.$emit('openTaskModalFromCalendar', date)"
+          @addTask="$nuxt.$emit('openTaskModalFromHome')"
         />
       </template>
-
-    </InnerPage>
+    </InnerTabbedPage>
+  </section>
 </template>
 
 <script>
-import AddTaskButton from '~/components/buttons/AddTaskButton.vue';
-import InnerPage from '~/components/layout/InnerPage.vue';
-import MainCalendar from '~/components/uiKit/MainCalendar.vue';
-import Task from '~/components/uiKit/Task.vue';
+import AddTaskButton from "~/components/buttons/AddTaskButton.vue";
+import InnerTabbedPage from "~/components/layout/InnerTabbedPage.vue";
+import MainCalendar from "~/components/uiKit/MainCalendar.vue";
+import Task from "~/components/uiKit/Task.vue";
 
 export default {
-    name: "IndexPage",
-    layout: "inner",
-    components: { InnerPage, MainCalendar, AddTaskButton, Task },
-    data: () => ({
-        preloader: true,
-        tasksOfTheDate: [],
-        date: null,
-        refreshTrigger: false
-    }),
-    computed: {
-      pendingTasks() {
-        return this.tasksOfTheDate.filter(i => !i.done);
-      },
-      doneTasks() {
-        return this.tasksOfTheDate.filter(i => i.done);
-      }
+  name: "IndexPage",
+  layout: "inner",
+  components: { MainCalendar, AddTaskButton, Task, InnerTabbedPage },
+  data: () => ({
+    tasksOfTheDate: [],
+    date: null,
+  }),
+  computed: {
+    pendingTasks() {
+      return this.tasksOfTheDate.filter((i) => !i.done);
     },
-    methods: {
-      loadTasks(date) {
-        this.date = date.fullDate;
-        this.tasksOfTheDate = date.tasks ? date.tasks : [];
-      }
+    doneTasks() {
+      return this.tasksOfTheDate.filter((i) => i.done);
     },
-    async created() {
-      const authToken = localStorage.getItem("authToken");
-      if (!authToken) {
-        this.$router.push("/start/login");
-      } else {
-        setTimeout(() => {
-          this.preloader = false;
-        }, 0);
-      }
-
-
-      this.$nuxt.$on("refreshView", () => {
-        this.refreshTrigger = !this.refreshTrigger;
-      })
+    tabsLengths() {
+      return [this.pendingTasks.length, this.doneTasks.length];
     },
-    beforeDestroy() {
-      this.$nuxt.$off("refreshView")
-    }
-}
+  },
+  methods: {
+    loadTasks(date) {
+      this.date = date.fullDate;
+      this.tasksOfTheDate = date.tasks ? date.tasks : [];
+    },
+  },
+};
 </script>
 
-
 <style scoped lang="scss">
-  .tasks-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15rem;
-    margin-bottom: 100rem;
-  }
+.calendar__calendar {
+  height: 342rem;
+}
 </style>

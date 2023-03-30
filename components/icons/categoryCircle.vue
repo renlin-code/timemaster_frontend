@@ -1,15 +1,13 @@
 <template>
-  <div class="category-circle"
+  <div
+    class="category-circle"
     :class="{
-      'category-circle--extended' : extended,
-      'selected' : selected
-      }"
-
+      'category-circle--extended': extended,
+      selected: selected,
+    }"
     :style="`background: ${color}; border: 5rem solid ${color};`"
   >
-    <div class="category-circle__inner"
-      :style="`background: ${color}`"
-    ></div>
+    <div class="category-circle__inner" :style="`background: ${color}`"></div>
   </div>
 </template>
 
@@ -19,42 +17,42 @@ export default {
   props: {
     color: {
       type: String,
-      default: "#777777"
+      default: "#777777",
     },
     extended: {
       type: Boolean,
-      default: false
+      default: false,
     },
     selected: {
       type: Boolean,
-      default: false
-    }
-  }
-}
+      default: false,
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
-  .category-circle {
-    width: 20rem;
-    height: 20rem;
-    border-radius: 50%;
-    transition: all 320ms ease-in-out;
-    &--extended {
-      width: 40rem;
-      height: 40rem;
-      &.selected {
-        display: grid;
-        place-content: center;
-        background: transparent !important;
-        .category-circle {
-          padding: 10rem;
-          &__inner {
-            width: 20rem;
-            height: 20rem;
-            border-radius: 50%;
-          }
+.category-circle {
+  width: 20rem;
+  height: 20rem;
+  border-radius: 50%;
+  transition: all 320ms ease-in-out;
+  &--extended {
+    width: 40rem;
+    height: 40rem;
+    &.selected {
+      display: grid;
+      place-content: center;
+      background: transparent !important;
+      .category-circle {
+        padding: 10rem;
+        &__inner {
+          width: 20rem;
+          height: 20rem;
+          border-radius: 50%;
         }
       }
     }
   }
+}
 </style>

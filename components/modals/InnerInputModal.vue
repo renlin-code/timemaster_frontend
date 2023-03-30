@@ -84,7 +84,7 @@ export default {
   background-size: cover;
   &__bg {
     left: calc(50% - 160rem);
-    top: 432rem;
+    top: 504rem;
     width: 320rem;
     height: 320rem;
     position: absolute;

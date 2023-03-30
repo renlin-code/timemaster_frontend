@@ -132,7 +132,7 @@ export default {
       this.animatePrev = true;
       setTimeout(() => {
         this.animatePrev = false;
-      }, 1000);
+      }, 800);
     },
     next() {
       if (this.currMonth === 11) {
@@ -229,7 +229,6 @@ export default {
       @keyframes prev {
         49% {
           transform: translateX(100%);
-          // opacity: 0;
         }
         51% {
           transform: translateX(-100%);
@@ -247,7 +246,6 @@ export default {
       @keyframes next {
         49% {
           transform: translateX(-100%);
-          // opacity: 0;
         }
         51% {
           transform: translateX(100%);
@@ -284,7 +282,7 @@ export default {
       color: $dark-gray;
     }
     &.current {
-      background: rgba(197, 226, 244, 0.3);
+      background: rgba(57, 216, 244, 0.5);
     }
     &.selected {
       background-color: rgba(245, 128, 94, 0.8);

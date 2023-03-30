@@ -362,7 +362,7 @@ export default {
           color: $main-color;
           margin-bottom: 20rem;
           svg {
-            transform: rotate(45deg);
+            transform: rotate(135deg);
             path {
               fill: $main-color;
             }

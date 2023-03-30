@@ -73,8 +73,6 @@ export default {
       console.error(error);
       redirect("/start");
     }
-    console.log(category);
-    console.log(tasks);
     return { category, tasks };
   },
   computed: {
@@ -100,17 +98,6 @@ export default {
       return [this.todaysTasks.length, this.pendingTasks.length, this.doneTasks.length];
     },
   },
-  // computed: {
-  //   noTasks() {
-  //     return this.tasks.length === 0;
-  //   },
-  //   pendingTasks() {
-  //     return this.tasks.filter((i) => !i.done);
-  //   },
-  //   doneTasks() {
-  //     return this.tasks.filter((i) => i.done);
-  //   },
-  // },
   methods: {
     async fetchCategory() {
       try {
@@ -149,11 +136,5 @@ export default {
       height: 22rem;
     }
   }
-}
-.tasks-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15rem;
-  margin-bottom: 100rem;
 }
 </style>

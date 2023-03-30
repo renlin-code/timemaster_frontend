@@ -429,6 +429,7 @@ export default {
 .front-layer {
   position: absolute;
   width: 100%;
+  overflow: hidden;
   z-index: 2;
   background-image: url("~/static/img/background1.png");
   background-color: #ffffff;

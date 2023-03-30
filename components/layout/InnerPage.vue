@@ -71,7 +71,7 @@ export default {
     width: 100%;
   }
   &__title {
-    margin-bottom: 34rem;
+    margin-bottom: 20rem;
   }
   &__static-block {
     &::v-deep > h2 {

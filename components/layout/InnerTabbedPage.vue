@@ -32,7 +32,7 @@
 
       <div
         class="inner-page-layout__scroll-block"
-        :style="`height: calc(100vh - 214rem - ${staticContentHeight}rem);`"
+        :style="`height: calc(100vh - 202rem - ${staticContentHeight}rem);`"
       >
         <div class="tabs__body">
           <div class="tabs__body-slider">
@@ -94,6 +94,11 @@ export default {
       this.flkty.resize();
     });
 
+    this.$nuxt.$on("resize", () => {
+      console.log("resize");
+      this.flkty.resize();
+    });
+
     this.flickityInit();
     this.selectTab(0);
   },
@@ -123,7 +128,7 @@ export default {
     width: 100%;
   }
   &__title {
-    margin-bottom: 34rem;
+    margin-bottom: 20rem;
   }
   &__static-block {
     &::v-deep > h2 {
@@ -138,11 +143,11 @@ export default {
   &__scroll-block {
     overflow-y: scroll;
     margin-top: 20rem;
-    padding-bottom: 27rem;
+    padding-bottom: 20rem;
   }
   &__button {
     position: absolute;
-    bottom: 27rem;
+    bottom: 20rem;
     right: 25rem;
   }
 }

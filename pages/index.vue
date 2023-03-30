@@ -5,7 +5,7 @@
       :tabsNames="['Today’s tasks', 'Pending', 'Done']"
       :tabsLengths="tabsLengths"
     >
-      <template #title v-if="profileData.name">
+      <template #title>
         {{ `Hello, ${profileData.name}!` }}
       </template>
 
