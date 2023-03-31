@@ -1,5 +1,9 @@
 <template>
   <section class="home-page">
+    <Transition name="fade">
+      <TasksModal v-if="showModal" @close="showModal = false" from="home" />
+    </Transition>
+
     <InnerTabbedPage
       :staticContentHeight="280"
       :tabsNames="['Today’s tasks', 'Pending', 'Done']"
@@ -48,10 +52,7 @@
       </template>
 
       <template #button>
-        <AddTaskButton
-          :animated="allTasks.length === 0"
-          @addTask="$nuxt.$emit('openTaskModalFromHome')"
-        />
+        <AddTaskButton :animated="allTasks.length === 0" @addTask="showModal = true" />
       </template>
     </InnerTabbedPage>
   </section>
@@ -64,6 +65,7 @@ import CategoriesCarousell from "~/components/complexItems/CategoriesCarousell.v
 import AddTaskButton from "~/components/buttons/AddTaskButton.vue";
 import InnerInputModal from "~/components/modals/InnerInputModal.vue";
 import Task from "~/components/uiKit/Task.vue";
+import TasksModal from "~/components/modals/innerInputInstances/TasksModal.vue";
 
 export default {
   name: "IndexPage",
@@ -75,6 +77,7 @@ export default {
     AddTaskButton,
     InnerInputModal,
     Task,
+    TasksModal,
   },
 
   async asyncData({ $axios, redirect }) {
@@ -89,6 +92,9 @@ export default {
     }
     return { profileData, allTasks };
   },
+  data: () => ({
+    showModal: false,
+  }),
   computed: {
     todaysDate() {
       const fullDate = new Date();

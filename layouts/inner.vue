@@ -12,7 +12,7 @@
         :placeholder="taskPlaceholder"
         v-model="taskData.name"
         :maxlength="30"
-        v-if="showTaskModal.show"
+        v-if="false"
         @close="closeModal('taskModal')"
       >
         <template #scroll-content>
@@ -573,16 +573,6 @@ export default {
     margin-bottom: 60rem;
   }
 }
-
-.inner-task-modal {
-  &__categories {
-    margin-bottom: 32rem;
-  }
-  &__calendar {
-    margin-bottom: 32rem;
-  }
-}
-
 .tasks-list {
   display: flex;
   flex-direction: column;

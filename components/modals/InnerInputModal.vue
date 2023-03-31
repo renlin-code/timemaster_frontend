@@ -1,5 +1,9 @@
 <template>
   <div class="input-modal-layout">
+    <Transition name="fade">
+      <FormPreloader class="input-modal-layout__preloader" v-if="preloader" />
+    </Transition>
+
     <div
       class="input-modal-layout__bg"
       :class="{ 'input-modal-layout__bg--blur': blur }"
@@ -17,6 +21,13 @@
         :placeholder="placeholder"
         @input="$emit('input', $event.target.value)"
       ></textarea>
+      <span
+        class="input-modal-layout__error timemaster-caption main-content-wrapper"
+        v-if="showError"
+        :class="{ 'input-modal-layout__error--shake': animateError }"
+      >
+        Name the task
+      </span>
 
       <div
         class="input-modal-layout__static-block"
@@ -28,7 +39,7 @@
 
       <div
         class="input-modal-layout__scroll-block"
-        :style="`height: calc(100vh - 256rem - ${staticContentHeight}rem);`"
+        :style="`height: calc(100vh - 280rem - ${staticContentHeight}rem);`"
       >
         <slot name="scroll-content" />
       </div>
@@ -42,13 +53,15 @@
 
 <script>
 import close from "../icons/close.vue";
+import FormPreloader from "../preloaders/FormPreloader.vue";
 
 export default {
   name: "StartPage",
-  components: { close },
+  components: { close, FormPreloader },
   props: {
+    trigger: false,
     value: null,
-
+    preloader: false,
     blur: {
       type: Boolean,
       default: false,
@@ -66,6 +79,28 @@ export default {
       default: null,
     },
   },
+  data: () => ({
+    showError: false,
+    animateError: false,
+  }),
+  watch: {
+    animateError(value) {
+      if (value) {
+        setTimeout(() => {
+          this.animateError = false;
+        }, 1300);
+      }
+    },
+    trigger() {
+      console.log("TIGHER NAME");
+      if (!this.value) {
+        this.showError = true;
+        this.animateError = true;
+      } else {
+        this.showError = false;
+      }
+    },
+  },
   mounted() {
     this.$refs.textarea.focus();
   },
@@ -75,6 +110,7 @@ export default {
 <style scoped lang="scss">
 .input-modal-layout {
   position: fixed;
+  top: 0;
   width: 100%;
   height: 100%;
   z-index: 5;
@@ -116,7 +152,7 @@ export default {
     color: $dark-gray;
     width: 100%;
     resize: none;
-    margin-bottom: 34rem;
+    margin-bottom: 60rem;
     &::placeholder {
       color: rgba($dark-gray, 0.5);
     }
@@ -148,6 +184,34 @@ export default {
     position: absolute;
     bottom: 27rem;
     right: 25rem;
+  }
+  &__error {
+    position: absolute;
+    top: 226rem;
+    width: 100%;
+    color: #de2424;
+    display: flex;
+    margin-top: 2rem;
+    &--shake {
+      animation: shake 1200ms 1;
+      @keyframes shake {
+        10% {
+          transform: translateX(10rem);
+        }
+        20% {
+          transform: translateX(-10rem);
+        }
+        30% {
+          transform: translateX(10rem);
+        }
+        40% {
+          transform: translateX(-10rem);
+        }
+        50% {
+          transform: translateX(0);
+        }
+      }
+    }
   }
 }
 </style>
