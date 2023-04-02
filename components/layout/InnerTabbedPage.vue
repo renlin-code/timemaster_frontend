@@ -92,11 +92,10 @@ export default {
     this.$nuxt.$on("refreshView", () => {
       this.flkty.resize();
     });
-
     this.$nuxt.$on("resize", () => {
       this.flkty.resize();
+      console.log("RESIZE");
     });
-
     this.flickityInit();
     this.selectTab(0);
   },

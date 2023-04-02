@@ -54,6 +54,7 @@
             $nuxt.$emit('openTasksModal', {
               from: 'home',
               edit: false,
+              data: {},
             })
           "
         />

@@ -38,7 +38,15 @@
       <template #button>
         <AddTaskButton
           :animated="tasksOfTheDate.length === 0"
-          @addTask="$nuxt.$emit('openTaskModalFromHome')"
+          @addTask="
+            $nuxt.$emit('openTasksModal', {
+              from: 'calendar',
+              edit: false,
+              data: {
+                date: '',
+              },
+            })
+          "
         />
       </template>
     </InnerTabbedPage>
@@ -74,6 +82,7 @@ export default {
     loadTasks(date) {
       this.date = date.fullDate;
       this.tasksOfTheDate = date.tasks ? date.tasks : [];
+      console.log("PAGE DATE", date);
     },
   },
 };

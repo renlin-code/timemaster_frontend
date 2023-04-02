@@ -136,9 +136,6 @@ export default {
         console.error(error.response.data.message);
       }
       this.pending = false;
-      setTimeout(() => {
-        this.$nuxt.$emit("resize");
-      }, 2000);
     },
     filterDateTasks(date) {
       const dateTasks = [];
@@ -193,6 +190,9 @@ export default {
         fullDate: `${this.currYear}-${month}-${this.selectedDate}`,
         tasks: dateTasks,
       });
+      setTimeout(() => {
+        this.$nuxt.$emit("resize");
+      }, 500);
     },
     async refresh() {
       const selectedDate = this.selectedDate;
@@ -205,6 +205,8 @@ export default {
     this.calendarInit();
   },
   mounted() {
+    console.log(this.date);
+    this.selectDate(this.date.getDate());
     this.refresh();
 
     this.$nuxt.$on("refreshView", () => {

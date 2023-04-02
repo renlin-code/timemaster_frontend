@@ -10,12 +10,20 @@
     }"
   >
     <div class="task__wrapper">
+      <Transition name="fade">
+        <DotsPreloader class="task__preloader" v-if="pending" :color="finalColor" />
+      </Transition>
       <div class="task__default">
         <span class="task__default-icon">
           <flag v-if="task.important" :color="finalColor" />
           <task-circle v-else :color="finalColor" />
         </span>
-        <p class="task__default-text timemaster-text">{{ task.name }}</p>
+        <p
+          class="task__default-text timemaster-text"
+          :class="{ 'task__default-text--swiped': optionsLeftOpen || optionsRightOpen }"
+        >
+          {{ task.name }}
+        </p>
         <div class="task__default-options task__default-options--left">
           <div class="task__default-options-wrapper">
             <button class="task__default-options-done" @click="toggleDone">
@@ -56,10 +64,11 @@
 import taskCircle from "../icons/taskCircle.vue";
 import flag from "../icons/flag.vue";
 import trash from "../icons/trash.vue";
+import DotsPreloader from "../preloaders/DotsPreloader.vue";
 
 export default {
   name: "Task",
-  components: { taskCircle, flag, trash },
+  components: { taskCircle, flag, trash, DotsPreloader },
   props: {
     color: "",
     task: {
@@ -68,6 +77,7 @@ export default {
     },
   },
   data: () => ({
+    pending: false,
     optionsLeftOpen: false,
     optionsRightOpen: false,
   }),
@@ -139,6 +149,7 @@ export default {
     },
     async toggleDone() {
       try {
+        this.pending = true;
         await this.$axios.$patch(`/profile/my-tasks/${this.task.id}`, {
           done: !this.task.done,
         });
@@ -146,6 +157,7 @@ export default {
       } catch (error) {
         console.error(error.response.data.message);
       }
+      // this.pending = false;
     },
     editTask() {
       this.$nuxt.$emit("openTasksModal", {
@@ -158,11 +170,13 @@ export default {
     },
     async deleteTask() {
       try {
+        this.pending = true;
         await this.$axios.$delete(`/profile/my-tasks/${this.task.id}`);
         this.$nuxt.$emit("refreshView");
       } catch (error) {
         console.error(error.response.data.message);
       }
+      // this.pending = false;
     },
     closeAllOptions() {
       this.optionsLeftOpen = false;
@@ -182,9 +196,16 @@ export default {
   padding: 0 25rem 4rem;
   overflow-x: hidden;
   &__wrapper {
+    position: relative;
     display: flex;
     gap: 40rem;
     transition: transform 360ms ease-in-out;
+  }
+  &__preloader {
+    position: absolute;
+    z-index: 1;
+    top: calc(50% - 6rem);
+    left: calc(50% - 22.25rem);
   }
   &__default {
     position: relative;
@@ -215,6 +236,9 @@ export default {
     }
     &-text {
       transition: all 360ms ease-in-out;
+      &--swiped {
+        color: $dark-gray;
+      }
     }
     &-options {
       width: 0;
