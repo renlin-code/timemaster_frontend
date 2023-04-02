@@ -5,13 +5,51 @@
     <MainPreloader :render="preloader" :minTime="1000" />
 
     <Transition name="fade">
-      <TasksModal
-        v-if="show.tasksModal"
-        :from="taskData.from"
-        :edit="taskData.edit"
-        :inyectedData="taskData.data"
-        @close="show.tasksModal = false"
-      />
+      <TasksModal from="home" v-if="show.tasksModal" @close="show.tasksModal = false" />
+    </Transition>
+
+    <Transition name="fade">
+      <InnerInputModal
+        class="inner-category-modal"
+        blur
+        :placeholder="categoryPlaceholder"
+        v-model="categoryData.name"
+        :maxlength="10"
+        v-if="showCategoryModal"
+        @close="closeModal('categoryModal')"
+      >
+        <template #scroll-content>
+          <ColorPicker
+            class="inner-category-modal__color-picker"
+            @selectColor="selectColor"
+          />
+          <DeleteCategory
+            class="inner-category-modal__delete"
+            v-if="editCategory"
+            @click.native="showDeleteCategoryModal = true"
+          />
+          <Transition name="fade">
+            <StartModal
+              :twoButtons="!isLastCategory"
+              v-if="showDeleteCategoryModal"
+              @close="showDeleteCategoryModal = false"
+              @action="deleteCategory"
+            >
+              <template #main-text>
+                {{ deleteModalText }}
+              </template>
+              <template #primary-button>
+                {{ deleteModalButtonText }}
+              </template>
+              <template #secondary-button> Yes </template>
+            </StartModal>
+          </Transition>
+        </template>
+
+        <template #button>
+          <OkButton @click.native="submitCategory" />
+        </template>
+      </InnerInputModal>
     </Transition>
 
     <div class="front-layer" :class="{ 'front-layer--open': frontOpen }">
@@ -119,10 +157,12 @@
 import HeaderDefault from "~/components/headers/HeaderDefault.vue";
 import DesktopRejetion from "~/components/others/DesktopRejetion.vue";
 import NavMenu from "~/components/navigation/NavMenu.vue";
+import InnerInputModal from "~/components/modals/InnerInputModal.vue";
 import OkButton from "~/components/buttons/OkButton.vue";
 import CategoriesAccordion from "~/components/uiKit/CategoriesAccordion.vue";
 import CalendarAccordion from "~/components/uiKit/CalendarAccordion.vue";
 import ImportantButton from "~/components/buttons/ImportantButton.vue";
+import Task from "~/components/uiKit/Task.vue";
 import NoResults from "~/components/figures/NoResults.vue";
 import ColorPicker from "~/components/uiKit/ColorPicker.vue";
 import DeleteCategory from "~/components/buttons/DeleteCategory.vue";
@@ -135,10 +175,12 @@ export default {
     DesktopRejetion,
     HeaderDefault,
     NavMenu,
+    InnerInputModal,
     OkButton,
     CategoriesAccordion,
     CalendarAccordion,
     ImportantButton,
+    Task,
     NoResults,
     ColorPicker,
     DeleteCategory,
@@ -151,11 +193,152 @@ export default {
     preloader: true,
 
     show: {
-      tasksModal: false,
+      tasksModal: true,
     },
 
-    taskData: null,
+    showCategoryModal: false,
+    editCategory: false,
+    isLastCategory: false,
+    showDeleteCategoryModal: false,
+    categoryPlaceholder: "",
+    categoryData: {
+      name: "",
+      color: "",
+    },
+
+    showTaskModal: {
+      show: false,
+      fromHome: false,
+      fromCategory: false,
+      fromCalendar: false,
+    },
+    taskPlaceholder: "",
+    taskData: {
+      name: "",
+      date: "",
+      important: false,
+      categoryId: null,
+    },
+
+    pending: false,
   }),
+  computed: {
+    deleteModalText() {
+      if (this.isLastCategory) {
+        return "You can't delete your last category. You need at least one category";
+      } else {
+        return "Are you sure you want to delete this category? If you delete this category, you’ll lose all the tasks of this category";
+      }
+    },
+    deleteModalButtonText() {
+      if (this.isLastCategory) {
+        return "Ok";
+      } else {
+        return "No";
+      }
+    },
+  },
+  methods: {
+    closeModal(modal) {
+      switch (modal) {
+        case "categoryModal":
+          this.showCategoryModal = false;
+          this.categoryData = {};
+          break;
+        case "taskModal":
+          for (let key in this.showTaskModal) {
+            this.showTaskModal[key] = false;
+          }
+          this.taskData = {};
+          break;
+        default:
+          this.showCategoryModal = false;
+          for (let key in this.showTaskModal) {
+            this.showTaskModal[key] = false;
+          }
+          this.categoryData = {};
+          this.taskData = {};
+          break;
+      }
+      this.$nuxt.$emit("refreshView");
+    },
+
+    selectColor(color) {
+      this.categoryData.color = color;
+    },
+
+    selectCategory(id) {
+      this.taskData.categoryId = id;
+    },
+    selectDate(date) {
+      this.taskData.date = date;
+    },
+    setImportant(value) {
+      this.taskData.important = value;
+    },
+    async submitTask() {
+      if (this.taskData.name && this.taskData.categoryId && this.taskData.date) {
+        if (this.taskData.id) {
+          const taskId = this.taskData.id;
+          delete this.taskData.id;
+          try {
+            this.pending = true;
+            await this.$axios.$patch(`/profile/my-tasks/${taskId}`, this.taskData);
+          } catch (error) {
+            console.error(error.response.data.message);
+          }
+        } else {
+          try {
+            this.pending = true;
+            await this.$axios.$post("/profile/my-tasks", this.taskData);
+          } catch (error) {
+            console.error(error.response.data.message);
+          }
+        }
+        this.pending = false;
+        this.closeModal("taskModal");
+      }
+    },
+    async submitCategory() {
+      if (this.categoryData.name && this.categoryData.color) {
+        if (this.categoryData.id) {
+          const categoryId = this.categoryData.id;
+          delete this.categoryData.id;
+          try {
+            this.pending = true;
+            await this.$axios.$patch(
+              `/profile/my-categories/${categoryId}`,
+              this.categoryData
+            );
+          } catch (error) {
+            console.error(error.response.data.message);
+          }
+        } else {
+          try {
+            this.pending = true;
+            await this.$axios.$post("/profile/my-categories", this.categoryData);
+          } catch (error) {
+            console.error(error.response.data.message);
+          }
+        }
+        this.pending = false;
+        this.closeModal("categoryModal");
+      }
+    },
+    async deleteCategory() {
+      if (!this.isLastCategory) {
+        try {
+          this.pending = true;
+          await this.$axios.$delete(`/profile/my-categories/${this.categoryData.id}`);
+        } catch (error) {
+          console.error(error.response.data.message);
+        }
+        this.pending = false;
+        this.showDeleteCategoryModal = false;
+        this.closeModal("categoryModal");
+      }
+    },
+  },
 
   created() {
     const authToken = localStorage.getItem("authToken");
@@ -166,9 +349,44 @@ export default {
 
   mounted() {
     this.preloader = false;
-    this.$nuxt.$on("openTasksModal", (e) => {
-      this.taskData = e;
-      this.show.tasksModal = true;
+
+    this.$nuxt.$on("lastCategory", (e) => {
+      this.isLastCategory = e;
+    });
+
+    this.$nuxt.$on("openCategoryModal", (id) => {
+      if (id) {
+        this.categoryData.id = id;
+        this.categoryPlaceholder = "Category name";
+        this.editCategory = true;
+      } else {
+        this.categoryPlaceholder = "Add new category";
+        this.editCategory = false;
+      }
+      this.showCategoryModal = true;
+    });
+
+    this.$nuxt.$on("openTaskModalFromHome", (id) => {
+      if (id) {
+        this.taskData.id = id;
+        this.taskPlaceholder = "Task name";
+      } else {
+        this.taskPlaceholder = "Add new task";
+      }
+      this.showTaskModal.show = true;
+      this.showTaskModal.fromHome = true;
+    });
+    this.$nuxt.$on("openTaskModalFromCategory", (categoryId) => {
+      this.taskData.categoryId = categoryId;
+      this.taskPlaceholder = "Add new task";
+      this.showTaskModal.show = true;
+      this.showTaskModal.fromCategory = true;
+    });
+    this.$nuxt.$on("openTaskModalFromCalendar", (date) => {
+      this.taskData.date = date;
+      this.taskPlaceholder = "Add new task";
+      this.showTaskModal.show = true;
+      this.showTaskModal.fromCalendar = true;
     });
   },
 };
@@ -322,6 +540,12 @@ export default {
     position: absolute;
     left: 0;
     top: 0;
+  }
+}
+
+.inner-category-modal {
+  &__color-picker {
+    margin-bottom: 60rem;
   }
 }
 </style>

@@ -148,7 +148,13 @@ export default {
       }
     },
     editTask() {
-      this.$nuxt.$emit("openTaskModalFromHome", this.task.id);
+      this.$nuxt.$emit("openTasksModal", {
+        from: "home",
+        edit: true,
+        data: {
+          ...this.task,
+        },
+      });
     },
     async deleteTask() {
       try {

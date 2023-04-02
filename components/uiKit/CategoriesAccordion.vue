@@ -5,8 +5,8 @@
       :class="{ 'categories-accordion--open': open }"
     >
       <div class="categories-accordion__head" @click="open = !open">
-        <categories class="categories-accordion__head-icon" color="#F5805E" />
-        <span class="timemaster-subtitle">Categories</span>
+        <categories class="categories-accordion__head-icon" :color="colorHeader" />
+        <span class="timemaster-subtitle">{{ textHeader }}</span>
       </div>
       <div class="categories-accordion__body">
         <ul class="categories-accordion__body-categories">
@@ -118,6 +118,7 @@ export default {
       type: Boolean,
       default: false,
     },
+    inyectedCategoryId: null,
   },
   data: () => ({
     categories: [],
@@ -141,12 +142,29 @@ export default {
 
     pending: false,
   }),
+  computed: {
+    colorHeader() {
+      return this.selected === null ? "#F5805E" : this.categories[this.selected].color;
+    },
+    textHeader() {
+      return this.selected === null ? "Categories" : this.categories[this.selected].name;
+    },
+  },
+
   methods: {
     async fetchCategories() {
       try {
         this.categories = await this.$axios.$get("/profile/my-categories");
       } catch (error) {
         console.error(error.response.data.message);
+      }
+    },
+    setInyectedCategory() {
+      if (this.inyectedCategoryId) {
+        const foundCategory = this.categories.find(
+          (category) => category.id === this.inyectedCategoryId
+        );
+        this.select(foundCategory);
       }
     },
     select(category) {
@@ -215,8 +233,7 @@ export default {
       }
     },
     trigger() {
-      console.log("trigger");
-      if (!this.selected) {
+      if (this.selected === null) {
         this.showError = true;
         this.animateError = true;
       } else {
@@ -226,6 +243,7 @@ export default {
   },
   async created() {
     await this.fetchCategories();
+    this.setInyectedCategory();
   },
 };
 </script>

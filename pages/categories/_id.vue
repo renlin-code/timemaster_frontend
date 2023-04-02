@@ -1,7 +1,7 @@
 <template>
   <section class="category">
     <InnerTabbedPage
-      :staticContentHeight="32"
+      :staticContentHeight="73"
       :tabsNames="['Today’s tasks', 'Pending', 'Done']"
       :tabsLengths="tabsLengths"
     >
@@ -48,7 +48,15 @@
       <template #button>
         <AddTaskButton
           :animated="tasks.length === 0"
-          @click.native="$nuxt.$emit('openTaskModalFromHome')"
+          @addTask="
+            $nuxt.$emit('openTasksModal', {
+              from: 'category',
+              edit: false,
+              data: {
+                categoryId: category.id,
+              },
+            })
+          "
         />
       </template>
     </InnerTabbedPage>

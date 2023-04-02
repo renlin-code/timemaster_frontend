@@ -138,7 +138,7 @@ export default {
       this.pending = false;
       setTimeout(() => {
         this.$nuxt.$emit("resize");
-      }, 100);
+      }, 2000);
     },
     filterDateTasks(date) {
       const dateTasks = [];
@@ -195,8 +195,10 @@ export default {
       });
     },
     async refresh() {
+      const selectedDate = this.selectedDate;
       await this.fetchMonthTask(this.currMonth, this.currYear, this.lastDateOfMonth);
-      this.selectDate(this.date.getDate());
+      this.selectedDate = selectedDate;
+      this.selectDate(this.selectedDate);
     },
   },
   created() {

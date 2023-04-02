@@ -14,21 +14,27 @@
         <div class="inner-modal__group">
           <CategoriesAccordion
             class="inner-modal__categories"
-            v-if="from === ('home' || 'calendar')"
+            v-if="from !== 'category' || edit"
             @selectCategory="selectCategory"
             :trigger="trigger"
+            :inyectedCategoryId="inyectedData ? inyectedData.categoryId : null"
           />
         </div>
         <div class="inner-modal__group">
           <CalendarAccordion
             class="inner-modal__calendar"
-            v-if="from === ('home' || 'category')"
+            v-if="from !== 'calendar' || edit"
             @selectDate="selectDate"
             :trigger="trigger"
+            :inyectedDate="inyectedData ? inyectedData.date : null"
           />
         </div>
         <div class="inner-modal__group">
-          <ImportantButton class="inner-modal__important" @select="setImportant" />
+          <ImportantButton
+            class="inner-modal__important"
+            @select="setImportant"
+            :inyectedImportant="inyectedData ? inyectedData.important : null"
+          />
         </div>
       </div>
     </template>
@@ -58,7 +64,10 @@ export default {
     from: {
       type: String,
     },
-    dataForEditing: {
+    edit: {
+      type: Boolean,
+    },
+    inyectedData: {
       type: Object,
     },
   },
@@ -81,6 +90,21 @@ export default {
       this.$nuxt.$emit("refreshView");
       this.$emit("close");
     },
+    setInyectedData() {
+      if (this.inyectedData.name) {
+        this.name = this.inyectedData.name;
+      }
+      if (this.inyectedData.categoryId) {
+        this.categoryId = this.inyectedData.categoryId;
+      }
+      if (this.inyectedData.date) {
+        this.date = this.inyectedData.date;
+      }
+      if (this.inyectedData.important) {
+        this.important = this.inyectedData.important;
+      }
+    },
+
     selectCategory(id) {
       this.categoryId = id;
     },
@@ -92,26 +116,44 @@ export default {
     },
     async submitTask() {
       this.trigger = !this.trigger;
-      console.log(this.name);
-      console.log(this.categoryId);
-      console.log(this.date);
+
+      console.log("NAME", this.name);
+      console.log("CATID", this.categoryId);
+      console.log("DATE", this.date);
+      console.log("IMPORT", this.important);
 
       if (this.name && this.categoryId && this.date) {
         this.pending = true;
-        try {
-          await this.$axios.$post("/profile/my-tasks", {
-            name: this.name,
-            categoryId: this.categoryId,
-            date: this.date,
-            important: this.important,
-          });
-        } catch (error) {
-          console.error(error.response.data.message);
+        if (!this.edit) {
+          try {
+            await this.$axios.$post("/profile/my-tasks/", {
+              name: this.name,
+              categoryId: this.categoryId,
+              date: this.date,
+              important: this.important,
+            });
+          } catch (error) {
+            console.error(error.response.data.message);
+          }
+        } else {
+          try {
+            await this.$axios.$patch(`/profile/my-tasks/${this.inyectedData.id}`, {
+              name: this.name,
+              categoryId: this.categoryId,
+              date: this.date,
+              important: this.important,
+            });
+          } catch (error) {
+            console.error(error.response.data.message);
+          }
         }
         this.close();
         this.pending = false;
       }
     },
+  },
+  created() {
+    this.setInyectedData();
   },
 };
 </script>

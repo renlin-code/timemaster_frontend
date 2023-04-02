@@ -1,9 +1,5 @@
 <template>
   <section class="home-page">
-    <Transition name="fade">
-      <TasksModal v-if="showModal" @close="showModal = false" from="home" />
-    </Transition>
-
     <InnerTabbedPage
       :staticContentHeight="280"
       :tabsNames="['Today’s tasks', 'Pending', 'Done']"
@@ -52,7 +48,15 @@
       </template>
 
       <template #button>
-        <AddTaskButton :animated="allTasks.length === 0" @addTask="showModal = true" />
+        <AddTaskButton
+          :animated="allTasks.length === 0"
+          @addTask="
+            $nuxt.$emit('openTasksModal', {
+              from: 'home',
+              edit: false,
+            })
+          "
+        />
       </template>
     </InnerTabbedPage>
   </section>
@@ -65,7 +69,6 @@ import CategoriesCarousell from "~/components/complexItems/CategoriesCarousell.v
 import AddTaskButton from "~/components/buttons/AddTaskButton.vue";
 import InnerInputModal from "~/components/modals/InnerInputModal.vue";
 import Task from "~/components/uiKit/Task.vue";
-import TasksModal from "~/components/modals/innerInputInstances/TasksModal.vue";
 
 export default {
   name: "IndexPage",
@@ -77,7 +80,6 @@ export default {
     AddTaskButton,
     InnerInputModal,
     Task,
-    TasksModal,
   },
 
   async asyncData({ $axios, redirect }) {
@@ -86,15 +88,13 @@ export default {
     try {
       profileData = await $axios.$get("/profile");
       allTasks = await $axios.$get("/profile/my-tasks");
+      console.log(allTasks);
     } catch (error) {
       console.error(error);
       redirect("/start");
     }
     return { profileData, allTasks };
   },
-  data: () => ({
-    showModal: false,
-  }),
   computed: {
     todaysDate() {
       const fullDate = new Date();
@@ -122,7 +122,7 @@ export default {
 
   mounted() {
     this.$nuxt.$on("refreshView", () => {
-      console.log("REFRESH");
+      // console.log("REFRESH");
       this.$nuxt.refresh();
     });
   },

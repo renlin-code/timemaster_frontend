@@ -92,7 +92,6 @@ export default {
       }
     },
     trigger() {
-      console.log("TIGHER NAME");
       if (!this.value) {
         this.showError = true;
         this.animateError = true;

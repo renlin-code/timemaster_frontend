@@ -6,7 +6,7 @@
     >
       <div class="calendar-accordion__head" @click="open = !open">
         <calendar class="calendar-accordion__head-icon" color="#F5805E" />
-        <span class="timemaster-subtitle">Choose date</span>
+        <span class="timemaster-subtitle"> {{ textHeader }} </span>
       </div>
 
       <div class="calendar-accordion__body">
@@ -88,6 +88,7 @@ export default {
       type: Boolean,
       default: false,
     },
+    inyectedDate: null,
   },
   data: () => ({
     open: false,
@@ -104,6 +105,12 @@ export default {
     selectedDate: null,
   }),
   computed: {
+    textHeader() {
+      return this.selectedDate === null
+        ? "Choose date"
+        : `${this.computedCurrMonth} ${this.selectedDate}, ${this.currYear}`;
+    },
+
     firstDayOfMonth() {
       return new Date(this.currYear, this.currMonth, 1).getDay();
     },
@@ -141,6 +148,14 @@ export default {
       this.date = new Date();
       this.currMonth = this.date.getMonth();
       this.currYear = this.date.getFullYear();
+    },
+    setInyectedDate() {
+      if (this.inyectedDate) {
+        const splittedDate = this.inyectedDate.split("-");
+        this.currYear = parseInt(splittedDate[0]);
+        this.currMonth = parseInt(splittedDate[1] - 1);
+        this.selectDate(parseInt(splittedDate[2]));
+      }
     },
     prev() {
       if (this.currMonth === 0) {
@@ -181,8 +196,8 @@ export default {
     },
   },
   watch: {
-    selectedDate() {
-      this.open = false;
+    selectedDate(value) {
+      if (value !== null) this.open = false;
     },
     animateError(value) {
       if (value) {
@@ -192,7 +207,6 @@ export default {
       }
     },
     trigger() {
-      console.log("trigger");
       if (!this.selectedDate) {
         this.showError = true;
         this.animateError = true;
@@ -204,6 +218,7 @@ export default {
 
   created() {
     this.calendarInit();
+    this.setInyectedDate();
   },
 };
 </script>

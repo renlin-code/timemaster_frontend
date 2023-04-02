@@ -90,12 +90,10 @@ export default {
   },
   mounted() {
     this.$nuxt.$on("refreshView", () => {
-      console.log("REFRESH");
       this.flkty.resize();
     });
 
     this.$nuxt.$on("resize", () => {
-      console.log("resize");
       this.flkty.resize();
     });
 
@@ -154,7 +152,7 @@ export default {
 
 .tabs {
   &__head {
-    margin-top: 40rem;
+    padding-top: 40rem;
     overflow-x: scroll;
     &::-webkit-scrollbar {
       display: none;

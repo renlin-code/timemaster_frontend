@@ -15,10 +15,18 @@ import flag from "../icons/flag.vue";
 export default {
   name: "ImportantButton",
   components: { flag },
+  props: {
+    inyectedImportant: null,
+  },
   data: () => ({
-    selected: true,
+    selected: false,
   }),
   methods: {
+    setInyectedImportant() {
+      if (this.inyectedImportant) {
+        this.selected = this.inyectedImportant;
+      }
+    },
     select() {
       this.selected = !this.selected;
       this.$emit("select", this.selected);
@@ -30,7 +38,7 @@ export default {
     },
   },
   created() {
-    this.select();
+    this.setInyectedImportant();
   },
 };
 </script>
