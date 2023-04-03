@@ -10,7 +10,14 @@
             extended
             @click.native="$router.push(`/categories/${category.id}`)"
           />
-          <AddCategory @click.native="$nuxt.$emit('openCategoryModal')" />
+          <AddCategory
+            @click.native="
+              $nuxt.$emit('openCategoriesModal', {
+                edit: false,
+                data: {},
+              })
+            "
+          />
         </ul>
       </template>
     </InnerPage>

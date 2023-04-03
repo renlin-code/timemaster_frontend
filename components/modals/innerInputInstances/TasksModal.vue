@@ -4,6 +4,7 @@
     blur
     :preloader="pending"
     :placeholder="placeholder"
+    errorText="Name the task"
     v-model="name"
     :maxlength="30"
     @close="close"

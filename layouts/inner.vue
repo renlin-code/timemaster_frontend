@@ -14,6 +14,15 @@
       />
     </Transition>
 
+    <Transition name="fade">
+      <CategoriesModal
+        v-if="show.categoriesModal"
+        :edit="categoryData.edit"
+        :inyectedData="categoryData.data"
+        @close="show.categoriesModal = false"
+      />
+    </Transition>
+
     <div class="front-layer" :class="{ 'front-layer--open': frontOpen }">
       <header>
         <HeaderDefault @openMenu="frontOpen = true" />
@@ -119,32 +128,18 @@
 import HeaderDefault from "~/components/headers/HeaderDefault.vue";
 import DesktopRejetion from "~/components/others/DesktopRejetion.vue";
 import NavMenu from "~/components/navigation/NavMenu.vue";
-import OkButton from "~/components/buttons/OkButton.vue";
-import CategoriesAccordion from "~/components/uiKit/CategoriesAccordion.vue";
-import CalendarAccordion from "~/components/uiKit/CalendarAccordion.vue";
-import ImportantButton from "~/components/buttons/ImportantButton.vue";
-import NoResults from "~/components/figures/NoResults.vue";
-import ColorPicker from "~/components/uiKit/ColorPicker.vue";
-import DeleteCategory from "~/components/buttons/DeleteCategory.vue";
-import StartModal from "~/components/modals/StartModal.vue";
 import MainPreloader from "~/components/preloaders/MainPreloader.vue";
 import TasksModal from "~/components/modals/innerInputInstances/TasksModal.vue";
+import CategoriesModal from "~/components/modals/innerInputInstances/CategoriesModal.vue";
 
 export default {
   components: {
     DesktopRejetion,
     HeaderDefault,
     NavMenu,
-    OkButton,
-    CategoriesAccordion,
-    CalendarAccordion,
-    ImportantButton,
-    NoResults,
-    ColorPicker,
-    DeleteCategory,
-    StartModal,
     MainPreloader,
     TasksModal,
+    CategoriesModal,
   },
   data: () => ({
     frontOpen: false,
@@ -152,9 +147,11 @@ export default {
 
     show: {
       tasksModal: false,
+      categoriesModal: false,
     },
 
     taskData: null,
+    categoryData: null,
   }),
 
   created() {
@@ -166,10 +163,17 @@ export default {
 
   mounted() {
     this.preloader = false;
+
     this.$nuxt.$on("openTasksModal", (e) => {
       this.taskData = e;
       console.log("NUXTON", this.taskData);
       this.show.tasksModal = true;
+    });
+
+    this.$nuxt.$on("openCategoriesModal", (e) => {
+      this.categoryData = e;
+      console.log("NUXTON", this.categoryData);
+      this.show.categoriesModal = true;
     });
   },
 };

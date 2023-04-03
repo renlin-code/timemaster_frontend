@@ -26,7 +26,7 @@
         v-if="showError"
         :class="{ 'input-modal-layout__error--shake': animateError }"
       >
-        Name the task
+        {{ errorText }}
       </span>
 
       <div
@@ -69,6 +69,10 @@ export default {
     staticContentHeight: {
       type: Number,
       default: 0,
+    },
+    errorText: {
+      type: String,
+      default: "",
     },
     placeholder: {
       type: String,

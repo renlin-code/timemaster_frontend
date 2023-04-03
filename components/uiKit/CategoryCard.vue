@@ -79,7 +79,10 @@ export default {
   },
   methods: {
     editCategory() {
-      this.$nuxt.$emit("openCategoryModal", this.category.id);
+      this.$nuxt.$emit("openCategoriesModal", {
+        edit: true,
+        data: this.category,
+      });
     },
   },
 };
