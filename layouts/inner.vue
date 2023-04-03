@@ -168,6 +168,7 @@ export default {
     this.preloader = false;
     this.$nuxt.$on("openTasksModal", (e) => {
       this.taskData = e;
+      console.log("NUXTON", this.taskData);
       this.show.tasksModal = true;
     });
   },

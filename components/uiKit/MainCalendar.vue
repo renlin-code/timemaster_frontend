@@ -184,10 +184,12 @@ export default {
       this.selectedDate = date;
       const dateTasks = this.filterDateTasks(date);
 
-      const month =
+      const formatedMonth =
         this.currMonth < 9 ? `0${this.currMonth + 1}` : `${this.currMonth + 1}`;
+      const formatedDate =
+        this.selectedDate < 10 ? `0${this.selectedDate}` : `${this.selectedDate}`;
       this.$emit("selectDate", {
-        fullDate: `${this.currYear}-${month}-${this.selectedDate}`,
+        fullDate: `${this.currYear}-${formatedMonth}-${formatedDate}`,
         tasks: dateTasks,
       });
       setTimeout(() => {

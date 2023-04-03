@@ -20,7 +20,10 @@
         </span>
         <p
           class="task__default-text timemaster-text"
-          :class="{ 'task__default-text--swiped': optionsLeftOpen || optionsRightOpen }"
+          :class="{
+            'task__default-text--swiped': optionsLeftOpen || optionsRightOpen,
+            'task__default-text--opacity': pending,
+          }"
         >
           {{ task.name }}
         </p>
@@ -238,6 +241,9 @@ export default {
       transition: all 360ms ease-in-out;
       &--swiped {
         color: $dark-gray;
+      }
+      &--opacity {
+        opacity: 0;
       }
     }
     &-options {

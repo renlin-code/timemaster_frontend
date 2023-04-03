@@ -43,7 +43,7 @@
               from: 'calendar',
               edit: false,
               data: {
-                date: '',
+                date: date,
               },
             })
           "
@@ -82,7 +82,7 @@ export default {
     loadTasks(date) {
       this.date = date.fullDate;
       this.tasksOfTheDate = date.tasks ? date.tasks : [];
-      console.log("PAGE DATE", date);
+      console.log("PAGE DATE", this.date);
     },
   },
 };
