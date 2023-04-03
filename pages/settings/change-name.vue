@@ -1,28 +1,19 @@
 <template>
   <section>
     <StartPage class="change-name">
-      <template #title>
-        Change name
+      <template #title> Change name </template>
+      <template #subtitle>
+        Your current name: <span class="change-name__name">{{ name }}</span>
       </template>
 
       <template #inner>
         <Transition name="fade">
-          <StartModal
-            v-if=showModal
-            @close="showModal = false; $router.push('/')"
-          >
-            <template #main-text>
-              Name changed to "{{ resultName }}"
-            </template>
-            <template #primary-button>
-              Ok
-            </template>
+          <StartModal v-if="showModal" @close="showModal = false">
+            <template #main-text> Name changed to "{{ resultName }}" </template>
+            <template #primary-button> Ok </template>
           </StartModal>
         </Transition>
-        <FormPreloader
-          v-if="pending"
-        />
-
+        <FormPreloader v-if="pending" />
 
         <div class="change-name__form">
           <div class="change-name__form-top">
@@ -37,12 +28,7 @@
             />
           </div>
           <div class="change-name__form-bottom">
-            <MainButton
-              type="1"
-              @click.native="validate"
-            >
-              Change
-            </MainButton>
+            <MainButton type="1" @click.native="validate"> Change </MainButton>
           </div>
         </div>
       </template>
@@ -51,14 +37,27 @@
 </template>
 
 <script>
-import MainButton from '~/components/buttons/MainButton.vue';
-import StartInput from '~/components/inputs/StartInput.vue';
-import StartPage from '~/components/layout/StartPage.vue';
-import StartModal from '~/components/modals/StartModal.vue';
-import FormPreloader from '~/components/preloaders/FormPreloader.vue';
+import MainButton from "~/components/buttons/MainButton.vue";
+import StartInput from "~/components/inputs/StartInput.vue";
+import StartPage from "~/components/layout/StartPage.vue";
+import StartModal from "~/components/modals/StartModal.vue";
+import FormPreloader from "~/components/preloaders/FormPreloader.vue";
 
 export default {
   components: { StartPage, StartInput, MainButton, StartModal, FormPreloader },
+  async asyncData({ $axios, redirect }) {
+    let name;
+
+    try {
+      const prof = await $axios.$get("/profile");
+      name = prof.name;
+      console.log(name);
+    } catch (error) {
+      console.error(error);
+      redirect("/start");
+    }
+    return { name };
+  },
   data: () => ({
     showModal: false,
     resultName: "",
@@ -68,21 +67,25 @@ export default {
     errorMessage: "",
 
     dataForPost: {
-      name: ""
-    }
+      name: "",
+    },
   }),
   methods: {
-    validate(){
+    validate() {
       this.errorMessage = "";
       this.validateStack = [];
-      this.validateTrigger = !this.validateTrigger
+      this.validateTrigger = !this.validateTrigger;
     },
-    validateResponse(error){
-      this.validateStack.push(error)
+    validateResponse(error) {
+      this.validateStack.push(error);
 
-      const count = this.$el.querySelectorAll('*[required]').length
-      if(this.validateStack.length === count && this.validateStack.indexOf(true) === -1 && !this.pending){
-        this.submit()
+      const count = this.$el.querySelectorAll("*[required]").length;
+      if (
+        this.validateStack.length === count &&
+        this.validateStack.indexOf(true) === -1 &&
+        !this.pending
+      ) {
+        this.submit();
       }
     },
 
@@ -92,11 +95,13 @@ export default {
         const res = await this.$axios.$patch("/profile", this.dataForPost);
         this.resultName = res.name;
         this.showModal = true;
+        this.dataForPost.name = "";
+        this.$nuxt.refresh();
       } catch (error) {
-        console.error(error.response.data.message)
+        console.error(error.response.data.message);
       }
       this.pending = false;
-    }
+    },
   },
   created() {
     const authToken = localStorage.getItem("authToken");
@@ -104,19 +109,22 @@ export default {
       this.$router.push("/start/login");
     }
   },
-}
+};
 </script>
 
 <style scoped lang="scss">
-  .change-name {
-    position: relative;
-    &__form {
-      &-bottom {
-        width: calc(100% - 50rem);
-        position: fixed;
-        left: 25rem;
-        bottom: 67rem;
-      }
+.change-name {
+  position: relative;
+  &__name {
+    color: $main-color;
+  }
+  &__form {
+    &-bottom {
+      width: calc(100% - 50rem);
+      position: fixed;
+      left: 25rem;
+      bottom: 67rem;
     }
   }
+}
 </style>

@@ -126,7 +126,7 @@ export default {
   },
   mounted() {
     this.$nuxt.$on("refreshView", () => {
-      console.log("REFRESH");
+      //console.log("REFRESH");
       this.$nuxt.refresh();
     });
   },

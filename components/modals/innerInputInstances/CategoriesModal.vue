@@ -127,8 +127,8 @@ export default {
     async submitCategory() {
       this.trigger = !this.trigger;
 
-      console.log("NAME", this.name);
-      console.log("COLOR", this.color);
+      //console.log("NAME", this.name);
+      //console.log("COLOR", this.color);
 
       if (this.name && this.color) {
         this.pending = true;

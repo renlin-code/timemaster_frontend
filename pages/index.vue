@@ -89,7 +89,7 @@ export default {
     try {
       profileData = await $axios.$get("/profile");
       allTasks = await $axios.$get("/profile/my-tasks");
-      console.log(allTasks);
+      //console.log(allTasks);
     } catch (error) {
       console.error(error);
       redirect("/start");
@@ -123,7 +123,7 @@ export default {
 
   mounted() {
     this.$nuxt.$on("refreshView", () => {
-      // console.log("REFRESH");
+      // //console.log("REFRESH");
       this.$nuxt.refresh();
     });
   },

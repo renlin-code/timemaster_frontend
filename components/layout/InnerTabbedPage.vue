@@ -94,7 +94,7 @@ export default {
     });
     this.$nuxt.$on("resize", () => {
       this.flkty.resize();
-      console.log("RESIZE");
+      //console.log("RESIZE");
     });
     this.flickityInit();
     this.selectTab(0);

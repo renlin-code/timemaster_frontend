@@ -207,12 +207,12 @@ export default {
     this.calendarInit();
   },
   mounted() {
-    console.log(this.date);
+    //console.log(this.date);
     this.selectDate(this.date.getDate());
     this.refresh();
 
     this.$nuxt.$on("refreshView", () => {
-      console.log("REFRESH");
+      //console.log("REFRESH");
       this.refresh();
     });
   },

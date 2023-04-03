@@ -166,13 +166,13 @@ export default {
 
     this.$nuxt.$on("openTasksModal", (e) => {
       this.taskData = e;
-      console.log("NUXTON", this.taskData);
+      //console.log("NUXTON", this.taskData);
       this.show.tasksModal = true;
     });
 
     this.$nuxt.$on("openCategoriesModal", (e) => {
       this.categoryData = e;
-      console.log("NUXTON", this.categoryData);
+      //console.log("NUXTON", this.categoryData);
       this.show.categoriesModal = true;
     });
   },

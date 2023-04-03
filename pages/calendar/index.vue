@@ -82,7 +82,7 @@ export default {
     loadTasks(date) {
       this.date = date.fullDate;
       this.tasksOfTheDate = date.tasks ? date.tasks : [];
-      console.log("PAGE DATE", this.date);
+      //console.log("PAGE DATE", this.date);
     },
   },
 };

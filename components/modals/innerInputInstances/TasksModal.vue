@@ -118,10 +118,10 @@ export default {
     async submitTask() {
       this.trigger = !this.trigger;
 
-      console.log("NAME", this.name);
-      console.log("CATID", this.categoryId);
-      console.log("DATE", this.date);
-      console.log("IMPORT", this.important);
+      //console.log("NAME", this.name);
+      //console.log("CATID", this.categoryId);
+      //console.log("DATE", this.date);
+      //console.log("IMPORT", this.important);
 
       if (this.name && this.categoryId && this.date) {
         this.pending = true;

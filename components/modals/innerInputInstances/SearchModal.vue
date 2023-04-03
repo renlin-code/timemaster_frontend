@@ -57,7 +57,7 @@ export default {
           this.searchResults = await this.$axios.$get(
             `/profile/search-tasks?searchQuery=${query}`
           );
-          console.log(this.searchResults);
+          //console.log(this.searchResults);
         } else {
           this.searchResults = [];
         }
@@ -74,7 +74,7 @@ export default {
   },
   created() {
     this.$nuxt.$on("refreshView", () => {
-      console.log("REFRESH");
+      //console.log("REFRESH");
       this.searchTask(this.searchQuery);
     });
   },
