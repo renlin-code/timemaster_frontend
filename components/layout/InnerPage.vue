@@ -20,7 +20,7 @@
 
       <div
         class="inner-page-layout__scroll-block"
-        :style="`height: calc(100vh - 193rem - ${staticContentHeight}rem);`"
+        :style="`height: calc(100vh - 182rem - ${staticContentHeight}rem);`"
       >
         <slot name="scroll-content" />
       </div>

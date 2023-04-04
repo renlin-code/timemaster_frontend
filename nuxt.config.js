@@ -4,15 +4,25 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'time-master_frontend',
+    title: 'Time Master',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { hid: 'description', name: 'description', content: 'A very useful application for managing your time' },
+      { name: 'format-detection', content: 'telephone=no' },
+
+      { name: 'apple-mobile-web-app-title', content: 'Time Master' },
+      { name: 'application-name', content: 'Time Master' },
+      { name: 'msapplication-TileColor', content: '#da532c' },
+      { name: 'theme-color', content: '#ffffff' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'apple-touch-icon', size: '180x180', href: '/apple-touch-icon.png' },
+      { rel: 'icon', type: 'image/png', size: '32x32', href: '/favicon-32x32.png' },
+      { rel: 'icon', type: 'image/png', size: '16x16', href: '/favicon-16x16.png' },
+      { rel: 'manifest', href: '/site.webmanifest' },
+      { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#5bbad5' }
     ],
     script: [
       {src: "/js/rem.js", ssr: false},
