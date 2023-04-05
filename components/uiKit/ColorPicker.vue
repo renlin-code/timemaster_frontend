@@ -86,7 +86,8 @@ export default {
 <style scoped lang="scss">
 .color-picker {
   &__picker {
-    width: 268rem;
+    width: 100%;
+    max-width: 268rem;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(5, 1fr);

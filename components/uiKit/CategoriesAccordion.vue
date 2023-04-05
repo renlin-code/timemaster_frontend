@@ -364,8 +364,6 @@ export default {
     }
     &-color {
       &::v-deep .color-picker {
-        width: 100%;
-        row-gap: 8rem;
         .category-circle {
           width: 27rem;
           height: 27rem;
