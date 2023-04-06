@@ -29,10 +29,7 @@
     <MenuFigure class="menu__figure" width="192rem" height="218rem" />
     <span class="menu__autor"
       >Developed by:
-      <a
-        href="https://renlin-code-portfolio.netlify.app"
-        target="_blank"
-        rel="noopener noreferrer"
+      <a href="https://renlin-code.online" target="_blank" rel="noopener noreferrer"
         >Rene Linares</a
       ></span
     >
