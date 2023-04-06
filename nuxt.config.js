@@ -36,9 +36,12 @@ export default {
     ],
   },
 
-  loading: {
-    color: "transparent",
-    height: 0
+  loading: '~/components/preloaders/MainPreloader.vue',
+
+  loadingIndicator: {
+    name: 'three-bounce',
+    color: '#F5805E',
+    background: 'white'
   },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins

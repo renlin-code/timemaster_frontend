@@ -87,9 +87,10 @@ export default {
     let profileData, allTasks;
 
     try {
-      profileData = await $axios.$get("/profile");
-      allTasks = await $axios.$get("/profile/my-tasks");
-      //console.log(allTasks);
+      [profileData, allTasks] = await Promise.all([
+        await $axios.$get("/profile"),
+        await $axios.$get("/profile/my-tasks"),
+      ]);
     } catch (error) {
       console.error(error);
       redirect("/start");

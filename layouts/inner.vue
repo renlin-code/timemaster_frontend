@@ -1,9 +1,6 @@
 <template>
   <div class="screen">
     <DesktopRejetion />
-
-    <MainPreloader :render="preloader" :minTime="1000" />
-
     <Transition name="fade">
       <TasksModal
         v-if="show.tasksModal"
@@ -128,7 +125,6 @@
 import HeaderDefault from "~/components/headers/HeaderDefault.vue";
 import DesktopRejetion from "~/components/others/DesktopRejetion.vue";
 import NavMenu from "~/components/navigation/NavMenu.vue";
-import MainPreloader from "~/components/preloaders/MainPreloader.vue";
 import TasksModal from "~/components/modals/innerInputInstances/TasksModal.vue";
 import CategoriesModal from "~/components/modals/innerInputInstances/CategoriesModal.vue";
 
@@ -137,7 +133,6 @@ export default {
     DesktopRejetion,
     HeaderDefault,
     NavMenu,
-    MainPreloader,
     TasksModal,
     CategoriesModal,
   },
@@ -162,17 +157,19 @@ export default {
   },
 
   mounted() {
+    this.$nextTick(() => {
+      this.$nuxt.$loading.start();
+      setTimeout(() => this.$nuxt.$loading.finish(), 500);
+    });
     this.preloader = false;
 
     this.$nuxt.$on("openTasksModal", (e) => {
       this.taskData = e;
-      //console.log("NUXTON", this.taskData);
       this.show.tasksModal = true;
     });
 
     this.$nuxt.$on("openCategoriesModal", (e) => {
       this.categoryData = e;
-      //console.log("NUXTON", this.categoryData);
       this.show.categoriesModal = true;
     });
   },
