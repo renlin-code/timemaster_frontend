@@ -138,7 +138,6 @@ export default {
   },
   data: () => ({
     frontOpen: false,
-    preloader: true,
 
     show: {
       tasksModal: false,
@@ -161,7 +160,6 @@ export default {
       this.$nuxt.$loading.start();
       setTimeout(() => this.$nuxt.$loading.finish(), 500);
     });
-    this.preloader = false;
 
     this.$nuxt.$on("openTasksModal", (e) => {
       this.taskData = e;

@@ -12,11 +12,11 @@ import DesktopRejetion from "~/components/others/DesktopRejetion.vue";
 
 export default {
   components: { DesktopRejetion },
-  data: () => ({
-    preloader: true,
-  }),
   mounted() {
-    this.preloader = false;
+    this.$nextTick(() => {
+      this.$nuxt.$loading.start();
+      setTimeout(() => this.$nuxt.$loading.finish(), 500);
+    });
   },
 };
 </script>
