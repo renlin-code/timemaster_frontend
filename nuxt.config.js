@@ -21,7 +21,7 @@ export default {
       { hid: "twitter:title", name: "twitter:title", content: 'Time Master' },
       { hid: "twitter:url", name: "twitter:url", content: 'https://time-master.netlify.app/' },
       { hid: 'twitter:description', name: 'twitter:description', content: 'A fantastic application for managing your time' },
-      { hid: "twitter:image", name: "twitter:image", content: 'https://imgur.com/uNvv0j8'},
+      { hid: "twitter:image", name: "twitter:image", content: 'https://imgur.com/uNvv0j8.png'},
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
