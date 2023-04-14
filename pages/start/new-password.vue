@@ -10,7 +10,7 @@
       </template>
 
       <template #inner>
-        <FormPreloader
+        <BasicPreloader
           v-if="pending"
         />
 
@@ -54,10 +54,10 @@
 import MainButton from '~/components/buttons/MainButton.vue';
 import StartInput from '~/components/inputs/StartInput.vue';
 import StartPage from '~/components/layout/StartPage.vue';
-import FormPreloader from '~/components/preloaders/FormPreloader.vue';
+import BasicPreloader from '~/components/preloaders/BasicPreloader.vue';
 
 export default {
-    components: { StartPage, StartInput, MainButton, FormPreloader },
+    components: { StartPage, StartInput, MainButton, BasicPreloader },
     data: () => ({
     validateTrigger: false,
     pending: false,

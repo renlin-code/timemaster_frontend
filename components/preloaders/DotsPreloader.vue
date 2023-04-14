@@ -12,7 +12,7 @@ export default {
   props: {
     color: {
       type: String,
-      default: "#777777",
+      default: "#F5805E",
     },
   },
 };
@@ -36,8 +36,8 @@ export default {
 .circle {
   position: absolute;
   border-radius: 50%;
-  width: 10rem;
-  height: 10rem;
+  width: 17rem;
+  height: 17rem;
   animation: animation 1.2s infinite ease-in-out;
 }
 
@@ -58,7 +58,7 @@ export default {
   0%,
   80%,
   100% {
-    transform: scale(0.1);
+    transform: scale(0);
   }
   40% {
     transform: scale(1);

@@ -1,6 +1,8 @@
 <template>
   <div class="calendar">
-    <SimplePreloader class="calendar__preloader" v-if="pending" />
+    <div class="calendar__preloader" v-if="pending">
+      <DotsPreloader />
+    </div>
     <div class="calendar__calendar">
       <div class="calendar__data">
         <arrow-prev class="calendar__data-prev" color="#777777" @click.native="prev" />
@@ -57,11 +59,11 @@
 <script>
 import arrowPrev from "../icons/arrowPrev.vue";
 import arrowNext from "../icons/arrowNext.vue";
-import SimplePreloader from "../preloaders/SimplePreloader.vue";
+import DotsPreloader from "../preloaders/DotsPreloader.vue";
 
 export default {
   name: "MainCalendar",
-  components: { arrowPrev, arrowNext, SimplePreloader },
+  components: { arrowPrev, arrowNext, DotsPreloader },
   data: () => ({
     pending: true,
     opacity: true,

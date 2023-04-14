@@ -1,7 +1,7 @@
 <template>
   <div class="input-modal-layout">
     <Transition name="fade">
-      <FormPreloader class="input-modal-layout__preloader" v-if="preloader" />
+      <BasicPreloader class="input-modal-layout__preloader" v-if="preloader" />
     </Transition>
 
     <div
@@ -53,11 +53,11 @@
 
 <script>
 import close from "../icons/close.vue";
-import FormPreloader from "../preloaders/FormPreloader.vue";
+import BasicPreloader from "../preloaders/BasicPreloader.vue";
 
 export default {
   name: "StartPage",
-  components: { close, FormPreloader },
+  components: { close, BasicPreloader },
   props: {
     trigger: false,
     value: null,

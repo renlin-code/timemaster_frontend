@@ -26,7 +26,9 @@
 
         <div
           class="categories-accordion__sub-accordion"
-          :class="{ 'categories-accordion__sub-accordion--open': subAccordionOpen }"
+          :class="{
+            'categories-accordion__sub-accordion--open': subAccordionOpen,
+          }"
         >
           <div
             class="categories-accordion__sub-accordion-head timemaster-text"
@@ -84,7 +86,7 @@
             </div>
 
             <MainButton v-if="!pending" @click.native="submitNewCategory">Ok</MainButton>
-            <SimplePreloader
+            <DotsPreloader
               class="categories-accordion__sub-accordion-preloader"
               v-if="pending"
             />
@@ -107,12 +109,18 @@
 import MainButton from "../buttons/MainButton.vue";
 import categories from "../icons/categories.vue";
 import categoryCircle from "../icons/categoryCircle.vue";
-import SimplePreloader from "../preloaders/SimplePreloader.vue";
+import DotsPreloader from "../preloaders/DotsPreloader.vue";
 import ColorPicker from "./ColorPicker.vue";
 
 export default {
   name: "CategoriesAccordion",
-  components: { categories, categoryCircle, ColorPicker, MainButton, SimplePreloader },
+  components: {
+    categories,
+    categoryCircle,
+    ColorPicker,
+    MainButton,
+    DotsPreloader,
+  },
   props: {
     trigger: {
       type: Boolean,

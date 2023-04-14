@@ -28,7 +28,7 @@
       </Transition>
 
       <Transition name="fade">
-        <FormPreloader v-if="pending" />
+        <BasicPreloader v-if="pending" />
       </Transition>
     </template>
   </InnerInputModal>
@@ -36,13 +36,13 @@
 
 <script>
 import NoResults from "~/components/figures/NoResults.vue";
-import FormPreloader from "~/components/preloaders/FormPreloader.vue";
+import BasicPreloader from "~/components/preloaders/BasicPreloader.vue";
 import Task from "~/components/uiKit/Task.vue";
 import InnerInputModal from "../InnerInputModal.vue";
 
 export default {
   name: "SearchModal",
-  components: { InnerInputModal, NoResults, Task, FormPreloader },
+  components: { InnerInputModal, NoResults, Task, BasicPreloader },
   data: () => ({
     pending: false,
 

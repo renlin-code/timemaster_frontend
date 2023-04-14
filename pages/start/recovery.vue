@@ -24,7 +24,7 @@
           </StartModal>
         </Transition>
 
-        <FormPreloader
+        <BasicPreloader
           v-if="pending"
         />
 
@@ -60,10 +60,10 @@ import MainButton from '~/components/buttons/MainButton.vue';
 import StartInput from '~/components/inputs/StartInput.vue';
 import StartPage from '~/components/layout/StartPage.vue';
 import StartModal from '~/components/modals/StartModal.vue';
-import FormPreloader from '~/components/preloaders/FormPreloader.vue';
+import BasicPreloader from '~/components/preloaders/BasicPreloader.vue';
 
 export default {
-    components: { StartPage, StartInput, MainButton, StartModal, FormPreloader },
+    components: { StartPage, StartInput, MainButton, StartModal, BasicPreloader },
     data: () => ({
     validateTrigger: false,
     pending: false,

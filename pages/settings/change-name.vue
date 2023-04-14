@@ -13,7 +13,7 @@
             <template #primary-button> Ok </template>
           </StartModal>
         </Transition>
-        <FormPreloader v-if="pending" />
+        <BasicPreloader v-if="pending" />
 
         <div class="change-name__form">
           <div class="change-name__form-top">
@@ -41,10 +41,10 @@ import MainButton from "~/components/buttons/MainButton.vue";
 import StartInput from "~/components/inputs/StartInput.vue";
 import StartPage from "~/components/layout/StartPage.vue";
 import StartModal from "~/components/modals/StartModal.vue";
-import FormPreloader from "~/components/preloaders/FormPreloader.vue";
+import BasicPreloader from "~/components/preloaders/BasicPreloader.vue";
 
 export default {
-  components: { StartPage, StartInput, MainButton, StartModal, FormPreloader },
+  components: { StartPage, StartInput, MainButton, StartModal, BasicPreloader },
   async asyncData({ $axios, redirect }) {
     let name;
 

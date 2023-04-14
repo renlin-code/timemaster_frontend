@@ -36,7 +36,7 @@ export default {
     ],
   },
 
-  loading: '~/components/preloaders/MainPreloader.vue',
+  loading: '~/components/preloaders/BasicPreloader.vue',
 
   loadingIndicator: {
     name: 'three-bounce',
