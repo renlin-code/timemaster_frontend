@@ -13,13 +13,47 @@
       <Transition name="fade">
         <DotsPreloader class="task__preloader" v-if="pending" :color="finalColor" />
       </Transition>
+
       <div class="task__default">
+        <Transition name="fade">
+          <div class="task__info" v-if="showInfo" @click.stop="showInfo = false">
+            <div class="task__info-inner">
+              <div class="task__info-icon">
+                <svg
+                  width="100%"
+                  height="100%"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_995_10622)">
+                    <path
+                      d="M6.25 5.69444V8.47222M6.25 11.25C3.48858 11.25 1.25 9.01142 1.25 6.25C1.25 3.48858 3.48858 1.25 6.25 1.25C9.01142 1.25 11.25 3.48858 11.25 6.25C11.25 9.01142 9.01142 11.25 6.25 11.25ZM6.27767 4.02778V4.08333L6.22233 4.08332V4.02778H6.27767Z"
+                      stroke="#F5805E"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_995_10622">
+                      <rect width="12" height="12" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+              </div>
+              <span>
+                For edit or delete the task swipe right. For set the task done swipe left
+              </span>
+            </div>
+          </div>
+        </Transition>
         <span class="task__default-icon">
           <flag v-if="task.important" :color="finalColor" />
           <task-circle v-else :color="finalColor" />
         </span>
         <p
           class="task__default-text timemaster-text"
+          @click.stop="showInfo = true"
           :class="{
             'task__default-text--swiped': optionsLeftOpen || optionsRightOpen,
             'task__default-text--opacity': pending,
@@ -83,6 +117,7 @@ export default {
     pending: false,
     optionsLeftOpen: false,
     optionsRightOpen: false,
+    showInfo: false,
   }),
   computed: {
     fullDate() {
@@ -160,7 +195,7 @@ export default {
       } catch (error) {
         console.error(error.response.data.message);
       }
-      // this.pending = false;
+      this.pending = false;
     },
     editTask() {
       this.$nuxt.$emit("openTasksModal", {
@@ -179,7 +214,6 @@ export default {
       } catch (error) {
         console.error(error.response.data.message);
       }
-      // this.pending = false;
     },
     closeAllOptions() {
       this.optionsLeftOpen = false;
@@ -187,6 +221,15 @@ export default {
     },
   },
 
+  watch: {
+    showInfo(value) {
+      if (value) {
+        setTimeout(() => {
+          this.showInfo = false;
+        }, 3000);
+      }
+    },
+  },
   mounted() {
     this.swipeHandler();
   },
@@ -209,6 +252,30 @@ export default {
     z-index: 1;
     top: calc(50% - 6rem);
     left: calc(50% - 22.25rem);
+  }
+  &__info {
+    background: $white;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+    display: grid;
+    place-content: center;
+    &-icon {
+      width: 12rem;
+      height: 12rem;
+    }
+    &-inner {
+      width: 206rem;
+      display: grid;
+      grid-template-columns: 12rem 1fr;
+      gap: 5rem;
+      span {
+        font-size: 10rem;
+        text-align: center;
+        color: $dark_gray;
+      }
+    }
   }
   &__default {
     position: relative;

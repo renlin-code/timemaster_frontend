@@ -51,13 +51,13 @@
         :type="nativeInputType"
         :placeholder="placeholder"
         :value="value"
+        :maxlength="maxLength"
         @input="$emit('input', $event.target.value)"
       />
       <button
         class="start-input__reveal"
         v-if="type === 'password'"
-        @touchstart="passwordReveal = true"
-        @touchend="passwordReveal = false"
+        @click="passwordReveal = !passwordReveal"
       >
         <svg
           class="close"
@@ -119,7 +119,6 @@ export default {
   },
   data: () => ({
     passwordReveal: false,
-
     errorMessage: "",
 
     showError: false,
@@ -138,6 +137,16 @@ export default {
         return this.passwordReveal ? "text" : "password";
       } else {
         return "test";
+      }
+    },
+    maxLength() {
+      switch (this.type) {
+        case "name":
+          return 10;
+        case "password":
+          return 8;
+        default:
+          return null;
       }
     },
   },
@@ -159,8 +168,8 @@ export default {
       } else {
         switch (this.type) {
           case "name":
-            if (this.value.length < 3 || this.value.length > 10) {
-              this.sendError("Name length must be between 3-10 characters long");
+            if (this.value.length < 3) {
+              this.sendError("Name length can not be less than 3 characters");
             } else {
               this.showError = false;
             }
@@ -174,8 +183,8 @@ export default {
             }
             break;
           case "password":
-            if (this.value.length < 4 || this.value.length > 8) {
-              this.sendError("Password length must be between 4-8 characters long");
+            if (this.value.length < 4) {
+              this.sendError("Name length can not be less than 4 characters");
             } else {
               this.showError = false;
             }

@@ -1,6 +1,6 @@
 <template>
   <Transition name="fade">
-    <div class="main-preloader" v-if="loading">
+    <div class="main-preloader" v-if="show">
       <figure class="main-preloader__figure">
         <svg
           class="main-preloader__figure-clock"
@@ -633,16 +633,24 @@
 <script>
 export default {
   name: "DesktopRejection",
-  data: () => ({
-    loading: true,
-  }),
-
-  methods: {
-    start() {
-      this.loading = true;
+  props: {
+    render: {
+      type: Boolean,
+      default: true,
     },
-    finish() {
-      this.loading = false;
+    minTime: {
+      type: Number,
+      default: 0,
+    },
+  },
+  data: () => ({
+    show: true,
+  }),
+  watch: {
+    render(value) {
+      setTimeout(() => {
+        this.show = value;
+      }, this.minTime);
     },
   },
 };

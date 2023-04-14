@@ -2,6 +2,9 @@
   <main>
     <DesktopRejetion />
     <Transition name="fade">
+      <OfflineView v-if="$nuxt.isOffline" />
+    </Transition>
+    <Transition name="fade">
       <Nuxt />
     </Transition>
   </main>
@@ -9,9 +12,10 @@
 
 <script>
 import DesktopRejetion from "~/components/others/DesktopRejetion.vue";
+import OfflineView from "~/components/others/OfflineView.vue";
 
 export default {
-  components: { DesktopRejetion },
+  components: { DesktopRejetion, OfflineView },
   mounted() {
     this.$nextTick(() => {
       this.$nuxt.$loading.start();

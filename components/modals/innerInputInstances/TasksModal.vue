@@ -6,7 +6,7 @@
     :placeholder="placeholder"
     errorText="Name the task"
     v-model="name"
-    :maxlength="30"
+    :maxlength="40"
     @close="close"
     :trigger="trigger"
   >

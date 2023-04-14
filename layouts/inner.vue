@@ -2,6 +2,9 @@
   <div class="screen">
     <DesktopRejetion />
     <Transition name="fade">
+      <OfflineView v-if="$nuxt.isOffline" />
+    </Transition>
+    <Transition name="fade">
       <TasksModal
         v-if="show.tasksModal"
         :from="taskData.from"
@@ -127,6 +130,7 @@ import DesktopRejetion from "~/components/others/DesktopRejetion.vue";
 import NavMenu from "~/components/navigation/NavMenu.vue";
 import TasksModal from "~/components/modals/innerInputInstances/TasksModal.vue";
 import CategoriesModal from "~/components/modals/innerInputInstances/CategoriesModal.vue";
+import OfflineView from "~/components/others/OfflineView.vue";
 
 export default {
   components: {
@@ -135,6 +139,7 @@ export default {
     NavMenu,
     TasksModal,
     CategoriesModal,
+    OfflineView,
   },
   data: () => ({
     frontOpen: false,

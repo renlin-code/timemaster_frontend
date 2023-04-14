@@ -4,7 +4,7 @@
     :blur="searchQuery.length !== 0"
     placeholder="Search for tasks"
     v-model="searchQuery"
-    :maxlength="30"
+    :maxlength="40"
     @close="$emit('close')"
   >
     <template #scroll-content>

@@ -9,7 +9,19 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: 'A fantastic application for managing your time' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
+
+      { hid: 'description', name: 'description', content:  'A fantastic application for managing your time' },
+      { hid: 'og:title', property: 'og:title', content: 'Time Master' },
+      { hid: 'og:url', property: 'og:url', content: 'https://time-master.netlify.app/' },
+      { hid: 'og:description', property: 'og:description', content: 'A fantastic application for managing your time' },
+      { hid: 'og:image', property: 'og:image', content: 'https://imgur.com/uNvv0j8'},
+
+      // twitter card
+      { hid: "twitter:title", name: "twitter:title", content: 'Time Master' },
+      { hid: "twitter:url", name: "twitter:url", content: 'https://time-master.netlify.app/' },
+      { hid: 'twitter:description', name: 'twitter:description', content: 'A fantastic application for managing your time' },
+      { hid: "twitter:image", name: "twitter:image", content: 'https://imgur.com/uNvv0j8'},
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
