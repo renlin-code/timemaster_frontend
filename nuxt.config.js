@@ -15,7 +15,7 @@ export default {
       { hid: 'og:title', property: 'og:title', content: 'Time Master' },
       { hid: 'og:url', property: 'og:url', content: 'https://time-master.netlify.app/' },
       { hid: 'og:description', property: 'og:description', content: 'A fantastic application for managing your time' },
-      { hid: 'og:image', property: 'og:image', content: 'https://imgur.com/uNvv0j8'},
+      { hid: 'og:image', property: 'og:image', content: 'https://imgur.com/uNvv0j8.png'},
 
       // twitter card
       { hid: "twitter:title", name: "twitter:title", content: 'Time Master' },
