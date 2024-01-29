@@ -19,7 +19,7 @@
     "vue-template-compiler": "^2.7.10"
   },
   "devDependencies": {
-    "@nuxtjs/style-resources": "^1.2.1",
+    "@nuxtjs/style-resources": "^1.2.2",
     "sass": "^1.57.1",
     "sass-loader": "^10"
   }
